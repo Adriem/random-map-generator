@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+	<title>Procedural
+	 map generator</title> 
+	<meta charset="UTF-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="bspdungeon.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('[data-toggle="tooltip"]').tooltip();
+			var c = document.getElementById('cnvs').getContext('2d') 
+			var map = new DungMap(64, 64, c);
+		});
+	</script>
+</head>
+<body>
+	<!-- NAVBAR -->
+	<nav class="navbar navbar-inverse navbar-fixed-top"><div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" style="border:0px">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>                       
+			</button>
+			<a class="navbar-brand" href="#">Procedural map generator</a>
+	    </div>
+	    <div  class="collapse navbar-collapse" id="myNavbar">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Home</a></li>
+	        <li><a href="#">About</a></li>
+	        <li><a href="#">Contact</a></li> 
+	        <li><a href="#">Check my projects!</a></li> 
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> View on GitHub!</a></li>
+	        <li><a href="#">Check my projects!</a></li> 
+	      </ul>
+	    </div>
+	</div></nav>
+
+	<!-- CONTENT -->
+	<div id="body" class="container">
+		<!-- TITLE -->
+		<div class="jumbotron">
+			<h2 class="text-center">
+				<span class="glyphicon glyphicon-wrench"></span>
+				 This site is under construction! 
+				<span class="glyphicon glyphicon-wrench"></span></h2>
+			<p class="text-center"> This site is under construction, so there may be some broken features. They'll be fixed as soon as possible, thanks for your patience :) </p>
+
+		</div>
+		<div class="page-header" style="border-color:#CCC;">
+			<h1 class="text-center">Procedural map generator</h1>
+		</div>
+		<!-- CONTROLS -->
+		<form class="form-horizontal col-lg-4 col-lg-offset-1 col-sm-6 col-xs-12" style="padding:15px">
+			<div class="form-group">
+				<label class="control-label col-sm-6 col-xs-5">Map Size:</label>
+				<div class="col-sm-3 col-xs-6">
+					<input type="number" class="form-control input-sm" name="map_size_w" min="0" value="64">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-6 col-xs-5">Iterations:</label>
+				<div class="col-sm-3 col-xs-6">
+					<input type="number" class="form-control input-sm" name="iterations" min="0" value="5">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-6 col-xs-5">Ratio restriction:</label>
+				<div class="col-sm-3 col-xs-6">
+					<input type="number" class="form-control input-sm" name="ratio_restriction" min="0" step="0.01" value="0.45">
+				</div>
+				<div class="col-xs-1 input-sm">
+					<input type="checkbox" name="ratio_restriction_enabled" checked="checked">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-6 col-xs-5">Size restriction:</label>
+				<div class="col-sm-3 col-xs-6">
+					<input type="number" class="form-control input-sm" name="size_restriction" min="1" value="5">
+				</div>
+				<div class="col-xs-1 input-sm">
+					<input type="checkbox" name="size_restriction_enabled" checked="checked">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-6 col-xs-5">Connectivity ratio:</label>
+				<div class="col-sm-3 col-xs-6">
+					<input type="number" class="form-control input-sm" name="connectivity_ratio" min="1" value="2">
+				</div>
+				<div class="col-xs-1 input-sm">
+					<input type="checkbox" name="paths_enabled" checked="checked">
+				</div>
+			</div>
+			
+			<div class="form-group"><div class="col-sm-12">
+				<div class="checkbox text-center input-sm">
+					<label><input type="checkbox" name="paths_enabled" checked="checked">Generate new seed</label>
+				</div>
+			</div></div>
+			<div class="form-group"><div class="col-sm-12">        
+				<div class="text-center">
+					<button type="submit" class="btn btn-danger">Generate!</button>
+				</div></div>
+			</div>
+			
+		</form>
+		<!-- CANVAS -->
+		<div class="canvas_wrapper col-sm-5">
+			<canvas width="400" height="400" id="cnvs" style="width:100%; height:auto;"></canvas>
+		</div>
+		<!-- INFO PANEL -->
+		<form class="form-horizontal col-sm-4 col-xs-12">
+		</form>
+	</div>
+</body>
+</html>
