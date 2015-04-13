@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+	<title>Procedural
+	 map generator</title> 
+	<meta charset="UTF-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="bspdungeon.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('[data-toggle="tooltip"]').tooltip();
+			var c = document.getElementById('cnvs').getContext('2d') 
+			var map = new DungMap(64, 64, c);
+		});
+	</script>
+</head>
+<body>
+	<!-- NAVBAR -->
+	<nav class="navbar navbar-inverse navbar-fixed-top"><div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" style="border:0px">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>                       
+			</button>
+			<a class="navbar-brand" href="#">Procedural map generator</a>
+	    </div>
+	    <div  class="collapse navbar-collapse" id="myNavbar">
+	      <ul class="nav navbar-nav">
+	        <li><a href="index.html">Home</a></li>
+	        <li class="active"><a href="about.html">About</a></li>
+	        <li><a href="#">Contact</a></li> 
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a href="http://www.github.com/adriem/random-map-generator"><span class="fa fa-github fa-lg"></span>   View on GitHub!</a></li>
+	        <li><a href="#">Check my projects!</a></li> 
+	      </ul>
+	    </div>
+	</div></nav>
+
+	<!-- CONTENT -->
+	<div id="body" class="container">
+		
+		<!-- DISCLAIMER -->
+		<div class="jumbotron">
+			<h2 class="text-center">
+				<span class="glyphicon glyphicon-wrench"></span>
+				 This site is under construction! 
+				<span class="glyphicon glyphicon-wrench"></span></h2>
+			<p class="text-center"> This site is under construction, so there may be some broken features. They'll be fixed as soon as possible, thanks for your patience :) </p>
+		</div>
+
+		<!-- TITLE -->
+		<div class="page-header" style="border-color:#CCC;">
+			<h1 class="text-center">About procedural map generator</h1>
+		</div>
+		
+		<!-- BODY -->
+		<div class="text-center">
+			<p>Hey, thank you for checking this page! This is a little project I started to experiment with web technologies while I tried some algorythms of random map generation. Make sure you have javascript enabled on this page for this to work.</p> 
+			<p class="text-center">This isn't intended to be the most efficient map generator nor the most flexible one. I'm also not trying to teach anything to anybody. This is just the result of some research and experimentation by my own. Please, keep this in mind, specially if you are going to use the code, which is available <a href="http://www.github.com/adriem/random-map-generator">on GitHub</a>. This project is still in developement, and I intend to add some fancy features in the future, like adding some more algorythms! :-D</p>
+			<p class="text-center">That said, <strong>I really hope you enjoy playing around with this little generator and find it useful! </strong> If you have any suggestions, comments or just want to tell me how wonderful this project is, feel free to email me, I'll reply as soon as I can. You can check some personal information in contact page.</p>
+			<p>Once again, thanks a lot for visiting this page.</p>
+			<br><br><br><br>
+			<p>Still here? Go <a href="index.html">play with the generator!</a></p> 
+		</div>
+	</div>
+</body>
+</html>
