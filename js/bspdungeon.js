@@ -25,6 +25,20 @@ Sector.prototype.split = function() {
 	return this.room
 }
 /*Sector.prototype.splitStep = function (sector, horizontalDirection, steps) {
+	if (horizontalDirection) {
+		if(steps === 0 || (sector.h < 2*SECTOR_MIN_SIZE && SIZE_RESTR_ENABLE) || 
+				(sector.h/sector.w < 2*RATIO_RESTR && RATIO_RESTR_ENABLE) return [sector];
+		var div1, div2
+		do {
+			div1 = 
+		} while ((SIZE_RESTR_ENABLE && div1.h < SECTOR_MIN_SIZE && div2.h < SECTOR_MIN_SIZE) || 
+				(RATIO_RESTR_ENABLE && div1.h/div1.w < RATIO_RESTR && div2.h/div2.w < RATIO_RESTR))
+	} else {
+	
+	}
+
+
+
 	if ((SIZE_RESTR_ENABLE && (sector.w < SECTOR_MIN_SIZE || 
 			sector.h < SECTOR_MIN_SIZE)) || steps === 0) return [sector]
 	var div1, div2
