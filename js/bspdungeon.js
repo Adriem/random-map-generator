@@ -77,21 +77,11 @@ Tree.prototype.grow = function (iterations) {
 }
 
 
-
-
-
-var DungMap = function(w, h, c) {
+var DungeonMap = function(w, h) {
 	this.w = w;
 	this.h = h;
-	this.c = c;
 	this.partitionTree = undefined
 	this.rooms = undefined
 	this.paths = undefined
 	this.tileMap = undefined
-
-	this.clear(this.c)
-}
-DungMap.prototype.clear = function (c) {
-	c.fillStyle = "#000"
-	c.fillRect(0, 0, this.w*TILE_SIZE, this.h*TILE_SIZE)
 }

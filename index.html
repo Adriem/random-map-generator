@@ -10,12 +10,13 @@
 	<link rel="stylesheet" href="css/style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="js/dungeon.js"></script>
 	<script src="js/bspdungeon.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('[data-toggle="tooltip"]').tooltip();
 			var c = document.getElementById('cnvs').getContext('2d') 
-			var map = new DungMap(64, 64, c);
+			var map = new TileMap(64, 64, c);
 		});
 	</script>
 </head>
@@ -123,3 +124,6 @@
 	</div>
 </body>
 </html>
+
+
+
