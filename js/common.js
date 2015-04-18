@@ -5,17 +5,19 @@ var DRAW_GRID = true;
 var ALGORYTHM = "BSP";
 
 //TILE COLORS
-var GRID_COLOR = "#777";
+var GRID_COLOR = "#444";
 var BACKGROUND_COLOR = "#000";
-var WALL_COLOR = "#833";
+var WALL_COLOR = "#855";
 var GROUND_COLOR = "#CCC";
-var DOOR_COLOR = "#522";
+var DOOR_COLOR = "#225";
+var PATH_COLOR = "#522";
 
 //TILE VALUES
 var TILE_NULL = -1;
 var TILE_GROUND = 0;
 var TILE_DOOR = 1;
 var TILE_WALL = 2;
+var TILE_PATH = 3
 
 function randomValue(min, max) {
     min = min !== undefined ? min : 0
@@ -23,7 +25,13 @@ function randomValue(min, max) {
 }
 
 function randomTest(val) {
-    return Math.random() * 100 < val
+    val = val !== undefined ? val : 50;
+    return Math.random() * 100 < val;
+}
+
+var Point = function(x, y) {
+    this.x = x;
+    this.y = y;
 }
 
 var Rect = function(x, y, w, h) {
@@ -31,10 +39,15 @@ var Rect = function(x, y, w, h) {
     this.y = y; //Y coordinate
     this.w = w; //Width
     this.h = h; //Height
-    this.center = {
-        x: this.x + Math.floor(this.w/2),
-        y: this.y + Math.floor(this.h/2) 
-    }
+    this.center = new Point(
+        this.x + Math.floor(this.w/2),
+        this.y + Math.floor(this.h/2) 
+    );
+}
+
+var Path = function(start, end) {
+    this.start = start;
+    this.end = end;
 }
 
 var TileMap = function(w, h, c) {
@@ -80,6 +93,7 @@ TileMap.prototype.drawTiles = function(c, tilemap) {
                     case TILE_GROUND: color = GROUND_COLOR; break;
                     case TILE_WALL: color = WALL_COLOR; break;
                     case TILE_DOOR: color = DOOR_COLOR; break;
+                    case TILE_PATH: color = PATH_COLOR; break;
                     case TILE_NULL: //Fall through
                     default: color = BACKGROUND_COLOR; break;
                 }
