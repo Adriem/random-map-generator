@@ -10,13 +10,13 @@
 	<link rel="stylesheet" href="css/style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	<script src="js/dungeon.js"></script>
-	<script src="js/bspdungeon.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/bsp.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('[data-toggle="tooltip"]').tooltip();
 			var c = document.getElementById('cnvs').getContext('2d') 
-			var map = new TileMap(64, 64, c);
+			var map = new TileMap(MAP_SIZE, MAP_SIZE, c);
 		});
 	</script>
 </head>
@@ -59,10 +59,16 @@
 
 		<!-- TITLE -->
 		<div class="page-header">
-			<h1 class="text-center">Random map generator - Not working yet =(</h1>
+			<h1 class="text-center">Random map generator - Not working yet =( </h1>
 		</div>
 		<!-- CONTROLS -->
 		<form class="form-horizontal col-lg-4 col-lg-offset-1 col-sm-6 col-xs-12" style="padding:15px">
+			<ul class="nav nav-tabs" style="margin-bottom:15px">
+				<li style="padding: 12px 20px 0px;"><strong>Algorythm:</strong></li>
+			    <li class="active navbar-right pull-right"><a href="#">BSP</a></li>
+			    <li class="navbar-right pull-right disabled"><a href="#">Cellular</a></li>
+			    <li class="navbar-right pull-right disabled"><a href="#">Perlin</a></li>
+			</ul>
 			<div class="form-group">
 				<label class="control-label col-sm-6 col-xs-5">Map Size:</label>
 				<div class="col-sm-3 col-xs-6">
