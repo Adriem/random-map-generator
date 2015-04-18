@@ -1,15 +1,15 @@
 GRID_COLOR = "#CCC";
 BACKGROUND_COLOR = "#000";
-WALL_COLOR = "#999";
-GROUND_COLOR = "#555";
-DOOR_COLOR = "C00";
+WALL_COLOR = "#777";
+GROUND_COLOR = "#333";
+DOOR_COLOR = "#522";
 TILE_SIZE   = 400 / 64
 DRAW_GRID = true;
 
 TILE_NULL = -1;
 TILE_GROUND = 0;
 TILE_DOOR = 1;
-TILE_WALL = 3;
+TILE_WALL = 2;
 
 var TileMap = function(w, h, c) {
 	this.w = w;
@@ -21,7 +21,7 @@ var TileMap = function(w, h, c) {
         for (var i=0; i<h; i++) {
             arr[i] = [];
             for (var j=0; j<w; j++)
-                arr[i][j] = randomValue(0,5) - 1;
+                arr[i][j] = randomValue(0,4) - 1;
         }
         return arr;
     })(this.h, this.w);
