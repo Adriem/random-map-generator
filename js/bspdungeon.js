@@ -110,5 +110,28 @@ var DungeonMap = function(w, h) {
 	this.regenerate();
 }
 DungeonMap.prototype.regenerate = function () {
-	partitionTree = new Tree(new Sector(0,0,w,h))
+	partitionTree = new Tree(new Sector(0,0,this.w,this.h)).grow(ITERATIONS,Sector.split);
+	rooms = (function(){
+		var leafs = this.partitionTree.leafs;
+		var rooms = [];
+		for (var i=0; i<leafs.length; i++) {
+			leafs[i].node.generateRoom();
+			rooms.push(leafs[i].node.room);
+		}
+		return rooms;
+	})()
+	tileMap = (function(w, h, rooms) {
+		var array = []
+		for (var i=0; i<h; i++) {
+			array [i] = []
+			for (var j=0; j<w; j++)
+				array [i][j] = TILE_NULL
+		} 
+		for (var r=0; r<rooms.length; r++) {
+			for (var i=r.y; i<r.h; i++)
+				for (var j=r.x; j<r.w; j++)
+					array[i][j] = TILE_ROOM;
+		}
+		return array
+	})(this.width, this.height, this.rooms)
 }
