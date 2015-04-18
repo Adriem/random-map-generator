@@ -1,5 +1,5 @@
 //GLOBAL OPTIONS
-var MAP_SIZE = 64
+var MAP_SIZE = 64;
 var TILE_SIZE   = 400 / MAP_SIZE
 var DRAW_GRID = true;
 var ALGORYTHM = "BSP";
@@ -52,7 +52,6 @@ var TileMap = function(w, h, c) {
     })(this.w, this.h);
 
 	this.clear(this.c);
-    console.log(this.map.tileMap);
     this.drawTiles(this.c, this.map.tileMap);
 	if (DRAW_GRID) this.drawGrid(this.c);
 }
