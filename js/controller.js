@@ -8,4 +8,5 @@ app.controller('myController', function($scope) {
 	$scope.sizeRest = 5;
 	$scope.ratioRestEnabled = true;
 	$scope.ratioRest = 0.45;
+	$scope.newSeed = true;
 });
