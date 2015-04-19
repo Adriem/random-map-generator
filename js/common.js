@@ -7,9 +7,9 @@ var ALGORYTHM = "BSP";
 //TILE COLORS
 var GRID_COLOR = "#444";
 var BACKGROUND_COLOR = "#000";
-var WALL_COLOR = "#855";
+var WALL_COLOR = "#833";
 var GROUND_COLOR = "#CCC";
-var DOOR_COLOR = "#225";
+var DOOR_COLOR = "#228";
 var PATH_COLOR = "#522";
 
 //TILE VALUES
