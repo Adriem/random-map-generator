@@ -1,5 +1,5 @@
 
-var app = angular.module('random-map-generator', []);
+var app = angular.module("random-map-generator", []);
 app.controller('myController', function($scope) {
 	$scope.mapSize = 64;
 	$scope.iterations = 4;

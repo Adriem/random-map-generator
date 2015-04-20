@@ -1,5 +1,5 @@
 //GLOBAL OPTIONS
-var MAP_SIZE = 64;
+var MAP_SIZE = 40;
 var TILE_SIZE   = 400 / MAP_SIZE
 var DRAW_GRID = true;
 var ALGORYTHM = "BSP";
@@ -25,7 +25,7 @@ function randomValue(min, max) {
 }
 
 function randomTest(val) {
-    val = val !== undefined ? val : 50;
+    val = val !== undefined ? val : (50);
     return Math.random() * 100 < val;
 }
 
@@ -45,10 +45,53 @@ var Rect = function(x, y, w, h) {
     );
 }
 
+var Room = function (x, y, w, h) {
+    Rect.call(this, x, y, w, h);
+}
+Room.prototype = Object.create(Rect.prototype);
+Room.prototype.constructor = Room;
+Room.prototype.drawOnMap = function (map) {
+    for (var i=this.y; i<this.y + this.h; i++)
+        for (var j=this.x; j<this.x + this.w; j++){
+            map[i][j] = TILE_GROUND;
+        }
+    for (var i=this.y-1; i<=this.y + this.h; i++) 
+        map[i][this.x - 1] = TILE_WALL;
+    for (var i=this.y-1; i<=this.y + this.h; i++) 
+        map[i][this.x + this.w] = TILE_WALL;
+    for (var i=this.x-1; i<=this.x + this.w; i++)
+        map[this.y-1][i] = TILE_WALL;
+    for (var i=this.x-1; i<=this.x + this.w; i++) 
+        map[this.y + this.h][i] = TILE_WALL;
+}
+
+
 var Path = function(start, end) {
     this.start = start;
     this.end = end;
 }
+Path.prototype.drawOnMap = function(map) {
+    var x1, x2, y1, y2;
+    x1 = this.start.x < this.end.x ? this.start.x : this.end.x;
+    x2 = this.start.x < this.end.x ? this.end.x : this.start.x;
+    y1 = this.start.y < this.end.y ? this.start.y : this.end.y;
+    y2 = this.start.y < this.end.y ? this.end.y : this.start.y;
+    for (var i = y1; i <= y2; i++) {
+        map[i][this.start.x] = TILE_GROUND;
+        for (var j = -1; j <= 1; j++)
+            for (var k = -1; k <= 1; k++)
+                if (map[i+j][this.start.x+k] === TILE_NULL) 
+                    map[i+j][this.start.x+k] = TILE_WALL;
+    }
+    for (var i = x1; i <= x2; i++) {
+        map[this.end.y][i] = TILE_GROUND;
+        for (var j = -1; j <= 1; j++)
+            for (var k = -1; k <= 1; k++)
+                if (map[this.end.y+j][i+k] === TILE_NULL) 
+                    map[this.end.y+j][i+k] = TILE_WALL;
+    }
+}
+
 
 var TileMap = function(w, h, c) {
 	this.w = w;
