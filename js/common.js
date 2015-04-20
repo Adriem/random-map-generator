@@ -1,8 +1,9 @@
 //GLOBAL OPTIONS
-var MAP_SIZE = 40;
-var TILE_SIZE   = 400 / MAP_SIZE
-var DRAW_GRID = true;
-var ALGORYTHM = "BSP";
+var MAP_SIZE = 64;
+var CANVAS_SIZE = 400;
+var TILE_SIZE = CANVAS_SIZE / MAP_SIZE;
+DRAW_GRID = true;
+ALGORYTHM = "BSP";
 
 //TILE COLORS
 var GRID_COLOR = "#444";
@@ -65,7 +66,6 @@ Room.prototype.drawOnMap = function (map) {
         map[this.y + this.h][i] = TILE_WALL;
 }
 
-
 var Path = function(start, end) {
     this.start = start;
     this.end = end;
@@ -92,56 +92,36 @@ Path.prototype.drawOnMap = function(map) {
     }
 }
 
-
-var TileMap = function(w, h, c) {
-	this.w = w;
-	this.h = h;
-	this.c = c;
-
-    this.map = (function(w, h) {
-        switch (ALGORYTHM) {
-            case "BSP": return new BSPMap(w, h);
-            case "Cellular": return undefined;
-            case "Perlin": return undefined;
-            default: return undefined;
-        }
-    })(this.w, this.h);
-
-	this.clear(this.c);
-    this.drawTiles(this.c, this.map.tileMap);
-	if (DRAW_GRID) this.drawGrid(this.c);
-}
-TileMap.prototype.clear = function (c) {
-	c.fillStyle = BACKGROUND_COLOR;
-	c.fillRect(0, 0, this.w*TILE_SIZE, this.h*TILE_SIZE)
-}
-TileMap.prototype.drawGrid = function(c) {
-    c.beginPath();
-    c.strokeStyle = GRID_COLOR;
-    c.lineWidth = 0.5
-    for (var i = 0; i < MAP_SIZE; i++) {
-        c.moveTo(i * TILE_SIZE, 0)
-        c.lineTo(i * TILE_SIZE, MAP_SIZE * TILE_SIZE)
-        c.moveTo(0, i * TILE_SIZE)
-        c.lineTo(MAP_SIZE * TILE_SIZE, i * TILE_SIZE)
-    }
-    c.stroke()
-    c.closePath()
-}
-TileMap.prototype.drawTiles = function(c, tilemap) {
-    var color; 
+function paint(tilemap, c) {
+    //Clear canvas
+    c.fillStyle = BACKGROUND_COLOR;
+    c.fillRect(0, 0, this.w*TILE_SIZE, this.h*TILE_SIZE);
+    //Draw tiles
     for (var i=0; i<tilemap.length; i++) {
-            for (var j=0; j<tilemap[i].length; j++) {
-                switch(tilemap[i][j]) {
-                    case TILE_GROUND: color = GROUND_COLOR; break;
-                    case TILE_WALL: color = WALL_COLOR; break;
-                    case TILE_DOOR: color = DOOR_COLOR; break;
-                    case TILE_PATH: color = PATH_COLOR; break;
-                    case TILE_NULL: //Fall through
-                    default: color = BACKGROUND_COLOR; break;
-                }
-                c.fillStyle = color;
-                c.fillRect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        for (var j=0; j<tilemap[i].length; j++) {
+            switch(tilemap[i][j]) {
+                case TILE_GROUND: c.fillStyle = GROUND_COLOR; break;
+                case TILE_WALL: c.fillStyle = WALL_COLOR; break;
+                case TILE_DOOR: c.fillStyle = DOOR_COLOR; break;
+                case TILE_PATH: c.fillStyle = PATH_COLOR; break;
+                case TILE_NULL: //Fall through
+                default: c.fillStyle = BACKGROUND_COLOR; break;
+            }
+            c.fillRect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
+    }
+    //Draw grid
+    if (DRAW_GRID) {
+        c.beginPath();
+        c.strokeStyle = GRID_COLOR;
+        c.lineWidth = 0.5
+        for (var i = 0; i < MAP_SIZE; i++) {
+            c.moveTo(i * TILE_SIZE, 0)
+            c.lineTo(i * TILE_SIZE, MAP_SIZE * TILE_SIZE)
+            c.moveTo(0, i * TILE_SIZE)
+            c.lineTo(MAP_SIZE * TILE_SIZE, i * TILE_SIZE)
+        }
+        c.stroke()
+        c.closePath()
     }
 }
