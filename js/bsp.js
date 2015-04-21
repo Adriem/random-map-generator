@@ -10,7 +10,7 @@ var config = {
     SECTOR_MIN_SIZE: 9,//SIZE_RESTR / (1-2*ROOM_REDUCTION_RATIO);
     SECTOR_MAX_SIZE: 32,
     BIG_ROOM_CHANCE: 25,
-    ROOM_DELETING_RATIO: 40,
+    ROOM_DELETING_RATIO: 0.40,
     DOOR_CHANCE: 60,
     DOOR_ON_CORRIDOR_CHANCE: 0,
     PATH_COMPLEXITY: 1
@@ -85,8 +85,10 @@ Tree.prototype.removeDeadLeafs = function() {
     if (this.childs !== undefined) {
         for (var i=0; i<this.childs.length; i++) {
             this.childs[i].removeDeadLeafs();
-            if ((this.childs[i].childs === undefined && this.childs[i].node === undefined)
-                    || (this.childs[i].childs !== undefined && this.childs[i].childs.length < 1)) {
+            if ((this.childs[i].childs === undefined && 
+                    this.childs[i].node === undefined) ||
+                    (this.childs[i].childs !== undefined && 
+                    this.childs[i].childs.length < 1)) {
                 this.childs.splice(i, 1);
                 i--;
             }
@@ -117,7 +119,7 @@ var generateMap = function(size) {
 var generateRooms = function(tree, tilemap) { //TODO ENSURE QUALITY
     var rooms = [],
         leafs = tree.leafs,
-        roomsToDelete = Math.round(leafs.length * config.ROOM_DELETING_RATIO / 100);
+        roomsToDelete = Math.round(leafs.length * config.ROOM_DELETING_RATIO);
     // Delete some rooms
     for (var i=0; i<roomsToDelete; i++) {
         var index = randomValue(0, leafs.length);
@@ -210,7 +212,8 @@ var split = function (sector, horizontalDirection, steps) {
     var div1, div2, restriction;
     if (horizontalDirection) {
         //If too narrow to split in this direction, try to split in another direction
-        if (sector.h/sector.w < 2*config.RATIO_RESTR) return split(sector, !horizontalDirection, steps);        
+        if (sector.h/sector.w < 2*config.RATIO_RESTR) 
+            return split(sector, !horizontalDirection, steps);        
         //If must stop splitting
         if (steps === 0 || (sector.h < config.SECTOR_MAX_SIZE && randomTest(config.BIG_ROOM_CHANCE)) ||
                 sector.h < 2*config.SECTOR_MIN_SIZE) return [sector];
@@ -221,7 +224,8 @@ var split = function (sector, horizontalDirection, steps) {
         div2 = new Sector(sector.x, sector.y + div1.h, sector.w, sector.h - div1.h);
     } else {
         //If too narrow to split in this direction, try to split in another direction
-        if (sector.w/sector.h < 2*config.RATIO_RESTR) return split(sector, !horizontalDirection, steps);
+        if (sector.w/sector.h < 2*config.RATIO_RESTR) 
+            return split(sector, !horizontalDirection, steps);
         //If must stop splitting
         if (steps === 0 || (sector.h < config.SECTOR_MAX_SIZE && randomTest(config.BIG_ROOM_CHANCE)) ||
                 sector.w < 2*config.SECTOR_MIN_SIZE) return [sector];

@@ -75,7 +75,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-6 col-xs-5">Map Size:</label>
 				<div class="col-sm-4 col-xs-7">
-					<input type="number" class="form-control input-sm" min="0" id="mapSize">
+					<input type="number" class="form-control input-sm" min="0" step="5" id="mapSize">
 				</div>
 			</div>
 
@@ -96,7 +96,7 @@
 					  <input type="radio" name="bspPartitionMode" value="2" checked="on"disabled> Double</input>
 					</label>
 				</div>
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label class="control-label col-sm-6 col-xs-5">Size restriction:</label>
 					<div class="col-sm-3 col-xs-6">
 						<input type="number" class="form-control input-sm" id="sizeRest" min="0">
@@ -112,6 +112,15 @@
 					</div>
 					<div class="col-xs-1 input-sm">
 						<input type="checkbox" id="ratioRestEnabled" checked="on">
+					</div>
+				</div> -->
+				<div class="form-group">
+					<label class="control-label col-sm-6 col-xs-5">Room deleting ratio:</label>
+					<div class="col-sm-3 col-xs-6">
+						<input type="number" class="form-control input-sm" id="deletingRatio" min="0" step="0.05" max="1">
+					</div>
+					<div class="col-xs-1 col-sm-1 input-sm">
+						<input type="checkbox" id="deletingEnabled" checked="on">
 					</div>
 				</div>
 			</div>

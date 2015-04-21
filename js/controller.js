@@ -9,10 +9,12 @@ $(document).ready(function(){
 		switch ($("#algorythm").val()) {
 		case "BSP":
 			BSP.config.ITERATIONS = parseInt($("#bspIterations").val());
-			BSP.config.SIZE_RESTR = $("#sizeRestEnabled").prop("checked") ? 
+			/*BSP.config.SIZE_RESTR = $("#sizeRestEnabled").prop("checked") ? 
 				parseInt($("#sizeRest").val()) : 1;
 			BSP.config.RATIO_RESTR = $("#ratioRestEnabled").prop("checked") ? 
-				parseFloat($("#ratioRest").val()) : 0;
+				parseFloat($("#ratioRest").val()) : 0;*/
+			BSP.config.ROOM_DELETING_RATIO = $("#deletingEnabled").prop("checked") ? 
+				parseFloat($("#deletingRatio").val()) : 0;
 			paint(BSP.generateMap(MAP_SIZE), c);
 			break;
 		}
@@ -23,7 +25,7 @@ $(document).ready(function(){
 	// Set default data
 	$("#mapSize").val(MAP_SIZE);
 	$("#bspIterations").val(BSP.config.ITERATIONS);
-	if (BSP.config.SIZE_RESTR > 1) {
+	/*if (BSP.config.SIZE_RESTR > 1) {
 		$("#sizeRestEnabled").prop("checked", "on");
 		$("#sizeRest").val(BSP.config.SIZE_RESTR);
 	} else {
@@ -36,9 +38,16 @@ $(document).ready(function(){
 	} else {
 		$("#ratioRestEnabled").removeProp("checked", "on");
 		$("#ratioRest").val(BSP.config.RATIO_RESTR);
+	}*/
+	if (BSP.config.ROOM_DELETING_RATIO > 0) {
+		$("#deletingEnabled").prop("checked", "on");
+		$("#deletingRatio").val(BSP.config.ROOM_DELETING_RATIO);
+	} else {
+		$("#ratioRestEnabled").removeProp("checked", "on");
+		$("#ratioRest").val(BSP.config.RATIO_RESTR);
 	}
 	// Disable fields with enable-checkbox
-	$("#sizeRestEnabled").change(function() {
+	/*$("#sizeRestEnabled").change(function() {
 		if ($("#sizeRestEnabled").prop("checked")) {
 			$("#sizeRest").removeAttr("disabled", "");
 		} else $("#sizeRest").attr("disabled", "");
@@ -47,6 +56,11 @@ $(document).ready(function(){
 		if ($("#ratioRestEnabled").prop("checked")) {
 			$("#ratioRest").removeAttr("disabled", "");
 		} else $("#ratioRest").attr("disabled", "");
+	});*/
+	$("#deletingEnabled").change(function() {
+		if ($("#deletingEnabled").prop("checked")) {
+			$("#deletingRatio").removeAttr("disabled", "");
+		} else $("#deletingRatio").attr("disabled", "");
 	});
 	//Bind function to button
 	$("#generate").click(generateMap);
