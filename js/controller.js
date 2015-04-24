@@ -16,6 +16,7 @@ $(document).ready(function(){
 			BSP.config.ROOM_DELETING_RATIO = $("#deletingEnabled").prop("checked") ? 
 				parseFloat($("#deletingRatio").val()) : 0;
 			paint(BSP.generateMap(MAP_SIZE), c);
+			/*paint(TinyBSP.generateMap(MAP_SIZE), c);*/
 			break;
 		}
 		

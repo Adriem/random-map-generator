@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "CoffeeBSP.js",
+  "sourceRoot": "..\\coffee",
+  "sources": [
+    "CoffeeBSP.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;AAAA;AAAA"
+}

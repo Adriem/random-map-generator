@@ -22,6 +22,7 @@ var TILE_PATH = 3
 
 function randomValue(min, max) {
     min = min !== undefined ? min : 0
+    if (min > max) return min
     return Math.floor(Math.random() * (max - min) + min)
 }
 
@@ -52,8 +53,9 @@ var Room = function (x, y, w, h) {
 Room.prototype = Object.create(Rect.prototype);
 Room.prototype.constructor = Room;
 Room.prototype.drawOnMap = function (map) {
+    console.log(this);
     for (var i=this.y; i<this.y + this.h; i++)
-        for (var j=this.x; j<this.x + this.w; j++){
+        for (var j=this.x; j<this.x + this.w; j++) {
             map[i][j] = TILE_GROUND;
         }
     for (var i=this.y-1; i<=this.y + this.h; i++) 
