@@ -2,13 +2,20 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/js/test.js" />
         <item url="file://$PROJECT_DIR$/js/CoffeeBSP.js" />
+        <item url="file://$PROJECT_DIR$/examples/old/bsp.js" />
         <item url="file://$PROJECT_DIR$/js/bsp.js" />
+        <item url="file://$PROJECT_DIR$/js/CoffeeCommon.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/js/CoffeeBSP.js" />
+      <root url="file://$PROJECT_DIR$/js/test.js" />
+      <root url="file://$PROJECT_DIR$/js/test.js" />
+      <root url="file://$PROJECT_DIR$/examples/old/CoffeeBSP.js" />
+      <root url="file://$PROJECT_DIR$/examples/old/bsp.js" />
       <root url="file://$PROJECT_DIR$/js/bsp.js" />
+      <root url="file://$PROJECT_DIR$/js/CoffeeCommon.js" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

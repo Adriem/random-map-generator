@@ -57,9 +57,9 @@ class Tree
 
 generateMap = (size) ->
   tilemap = []
-  for i in [0..size-1]
+  for i in [0...size]
     tilemap[i] = []
-    for j in [0..size-1]
+    for j in [0...size]
       tilemap[i][j] = TILE_NULL
   tree = new Tree(new Rect(0, 0, size, size)).grow(cfg.ITERATIONS,split)
   rooms = generateRooms(tree, tilemap)
@@ -82,7 +82,7 @@ generateRooms = (tree, tilemap) ->
   leafs = tree.getLeafs()
   roomsToDelete = Math.round(leafs.length * cfg.ROOM_DELETING_RATIO)
   # Delete some rooms
-  for x in [0..roomsToDelete-1]
+  for x in [0...roomsToDelete]
     index = randomValue(0, leafs.length)
     leafs[index].kill()
     leafs.splice(index, 1)
