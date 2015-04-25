@@ -8,14 +8,14 @@ $(document).ready(function(){
 		TILE_SIZE = CANVAS_SIZE / MAP_SIZE;
 		switch ($("#algorythm").val()) {
 		case "BSP":
-			BSP.config.ITERATIONS = parseInt($("#bspIterations").val());
+			COFFE_BSP.config.ITERATIONS = parseInt($("#bspIterations").val());
 			/*BSP.config.SIZE_RESTR = $("#sizeRestEnabled").prop("checked") ? 
 				parseInt($("#sizeRest").val()) : 1;
 			BSP.config.RATIO_RESTR = $("#ratioRestEnabled").prop("checked") ? 
 				parseFloat($("#ratioRest").val()) : 0;*/
-			BSP.config.ROOM_DELETING_RATIO = $("#deletingEnabled").prop("checked") ? 
+			COFFE_BSP.config.ROOM_DELETING_RATIO = $("#deletingEnabled").prop("checked") ?
 				parseFloat($("#deletingRatio").val()) : 0;
-			paint(BSP.generateMap(MAP_SIZE), c);
+			paint(COFFE_BSP.generate(MAP_SIZE), c);
 			/*paint(TinyBSP.generateMap(MAP_SIZE), c);*/
 			break;
 		}
@@ -25,7 +25,7 @@ $(document).ready(function(){
 	$('[data-toggle="tooltip"]').tooltip();
 	// Set default data
 	$("#mapSize").val(MAP_SIZE);
-	$("#bspIterations").val(BSP.config.ITERATIONS);
+	$("#bspIterations").val(COFFE_BSP.config.ITERATIONS);
 	/*if (BSP.config.SIZE_RESTR > 1) {
 		$("#sizeRestEnabled").prop("checked", "on");
 		$("#sizeRest").val(BSP.config.SIZE_RESTR);
@@ -40,12 +40,12 @@ $(document).ready(function(){
 		$("#ratioRestEnabled").removeProp("checked", "on");
 		$("#ratioRest").val(BSP.config.RATIO_RESTR);
 	}*/
-	if (BSP.config.ROOM_DELETING_RATIO > 0) {
+	if (COFFE_BSP.config.ROOM_DELETING_RATIO > 0) {
 		$("#deletingEnabled").prop("checked", "on");
-		$("#deletingRatio").val(BSP.config.ROOM_DELETING_RATIO);
+		$("#deletingRatio").val(COFFE_BSP.config.ROOM_DELETING_RATIO);
 	} else {
 		$("#ratioRestEnabled").removeProp("checked", "on");
-		$("#ratioRest").val(BSP.config.RATIO_RESTR);
+		$("#ratioRest").val(COFFE_BSP.config.RATIO_RESTR);
 	}
 	// Disable fields with enable-checkbox
 	/*$("#sizeRestEnabled").change(function() {

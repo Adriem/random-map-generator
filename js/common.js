@@ -53,7 +53,6 @@ var Room = function (x, y, w, h) {
 Room.prototype = Object.create(Rect.prototype);
 Room.prototype.constructor = Room;
 Room.prototype.drawOnMap = function (map) {
-    console.log(this);
     for (var i=this.y; i<this.y + this.h; i++)
         for (var j=this.x; j<this.x + this.w; j++) {
             map[i][j] = TILE_GROUND;
