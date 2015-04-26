@@ -11,8 +11,7 @@ cfg =
   DOOR_CHANCE: 60
 
 class Tree
-  constructor: (node) ->
-    @node = node
+  constructor: (@node) ->
     @childs = []
 
   isEmpty: ->
@@ -138,7 +137,7 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
   split(div1, !horizontalDir, steps-1).concat(split(div2, !horizontalDir, steps-1))
 
 ### EXPORT ###
-@COFFE_BSP =
+@BSP =
   config: cfg
   generate: generateMap
   Tree: Tree

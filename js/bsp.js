@@ -16,8 +16,8 @@
   };
 
   Tree = (function() {
-    function Tree(node) {
-      this.node = node;
+    function Tree(node1) {
+      this.node = node1;
       this.childs = [];
     }
 
@@ -184,7 +184,7 @@
 
   /* EXPORT */
 
-  this.COFFE_BSP = {
+  this.BSP = {
     config: cfg,
     generate: generateMap,
     Tree: Tree

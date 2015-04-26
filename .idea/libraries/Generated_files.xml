@@ -5,17 +5,17 @@
         <item url="file://$PROJECT_DIR$/js/common.js" />
         <item url="file://$PROJECT_DIR$/examples/old/CoffeeBSP.js" />
         <item url="file://$PROJECT_DIR$/examples/old/bsp.js" />
-        <item url="file://$PROJECT_DIR$/js/test.js" />
         <item url="file://$PROJECT_DIR$/js/bsp.js" />
-        <item url="file://$PROJECT_DIR$/js/CoffeeCommon.js" />
+        <item url="file://$PROJECT_DIR$/js/controller.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
+      <root url="file://$PROJECT_DIR$/js/test.js" />
       <root url="file://$PROJECT_DIR$/js/common.js" />
       <root url="file://$PROJECT_DIR$/examples/old/CoffeeBSP.js" />
       <root url="file://$PROJECT_DIR$/examples/old/bsp.js" />
-      <root url="file://$PROJECT_DIR$/js/test.js" />
       <root url="file://$PROJECT_DIR$/js/bsp.js" />
+      <root url="file://$PROJECT_DIR$/js/controller.js" />
       <root url="file://$PROJECT_DIR$/examples/old/CoffeeCommon.js" />
     </CLASSES>
     <JAVADOC />

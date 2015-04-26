@@ -32,27 +32,17 @@
     if min >= max then min else Math.floor(Math.random() * (max - min) + min)
 
 class @Point
-  constructor: (x, y) ->
-    @x = x
-    @y = y
+  constructor: (@x, @y) ->
 
 class @Rect
-  constructor: (x, y, w, h) ->
-    @x = x
-    @y = y
-    @w = w
-    @h = h
+  constructor: (@x, @y, @w, @h) ->
     @center = new Point(@x + @w // 2, @y + @h // 2)
 
 class @Path
-  constructor: (start, end) ->
-    @start = start
-    @end = end
+  constructor: (@start, @end) ->
 
 class @TileMap
-  constructor: (w, h) ->
-    @w = w
-    @h = h
+  constructor: (@w, @h) ->
     @tilemap = []
     for i in [0...@h]
       @tilemap[i] = []
