@@ -30,25 +30,25 @@
     };
 
     Tree.prototype.getLeafs = function() {
-      var child, k, len, ref, retVal;
+      var child, j, len, ref, retVal;
       if (this.isLeaf()) {
         return [this];
       }
       retVal = [];
       ref = this.childs;
-      for (k = 0, len = ref.length; k < len; k++) {
-        child = ref[k];
+      for (j = 0, len = ref.length; j < len; j++) {
+        child = ref[j];
         retVal = retVal.concat(child.getLeafs());
       }
       return retVal;
     };
 
     Tree.prototype.getNodeList = function() {
-      var child, k, len, ref, retVal;
+      var child, j, len, ref, retVal;
       retVal = [this.node];
       ref = this.childs;
-      for (k = 0, len = ref.length; k < len; k++) {
-        child = ref[k];
+      for (j = 0, len = ref.length; j < len; j++) {
+        child = ref[j];
         retVal = retVal.concat(child.getNodeList());
       }
       return retVal;
@@ -61,10 +61,10 @@
     };
 
     Tree.prototype.removeDeadLeafs = function() {
-      var child, i, k, ref;
+      var child, i, j, ref;
       if (!this.isLeaf()) {
         ref = this.childs;
-        for (i = k = ref.length - 1; k >= 0; i = k += -1) {
+        for (i = j = ref.length - 1; j >= 0; i = j += -1) {
           child = ref[i];
           child.removeDeadLeafs();
           if (child.isLeaf() && child.isEmpty()) {
@@ -76,14 +76,14 @@
     };
 
     Tree.prototype.grow = function(iterations, splitFunction) {
-      var childNodes, k, len, node, ref;
+      var childNodes, j, len, node, ref;
       if (iterations > 0) {
         childNodes = splitFunction(this.node);
         if ((childNodes != null) && (0 < (ref = childNodes.length) && ref <= 1)) {
           this.node = childNodes[0];
         } else if ((childNodes != null) && childNodes.length > 1) {
-          for (k = 0, len = childNodes.length; k < len; k++) {
-            node = childNodes[k];
+          for (j = 0, len = childNodes.length; j < len; j++) {
+            node = childNodes[j];
             this.childs.push(new Tree(node).grow(iterations - 1, splitFunction));
           }
         }
@@ -95,61 +95,56 @@
 
   })();
 
-  generateMap = function(size) {
-    var i, j, k, l, paths, ref, ref1, rooms, tilemap, tree;
-    tilemap = [];
-    for (i = k = 0, ref = size; 0 <= ref ? k < ref : k > ref; i = 0 <= ref ? ++k : --k) {
-      tilemap[i] = [];
-      for (j = l = 0, ref1 = size; 0 <= ref1 ? l < ref1 : l > ref1; j = 0 <= ref1 ? ++l : --l) {
-        tilemap[i][j] = TILE_NULL;
-      }
-    }
+  generateMap = function(size, c) {
+    var paths, rooms, tilemap, tree;
+    tilemap = new TileMap(size, size);
     tree = new Tree(new Rect(0, 0, size, size)).grow(cfg.ITERATIONS, split);
     rooms = generateRooms(tree, tilemap);
     tree.removeDeadLeafs();
     paths = generatePaths(tree, tilemap);
-    return tilemap;
+    tilemap.drawWalls();
+    return tilemap.paint(c);
   };
 
   spawnRoom = function(sector) {
     var h, reduction, w, x, y;
     reduction = Math.min(Math.floor(sector.w * cfg.ROOM_REDUCTION, Math.floor(sector.h * cfg.ROOM_REDUCTION)));
-    x = sector.x + randomValue(2, reduction);
+    x = sector.x + utils.randomValue(2, reduction);
     y = sector.y + x - sector.x;
     w = sector.w - 2 * (x - sector.x);
     h = sector.h - 2 * (y - sector.y);
-    return new Room(x, y, w, h);
+    return new Rect(x, y, w, h);
   };
 
   generateRooms = function(tree, tilemap) {
-    var i, index, k, l, leaf, leafs, len, ref, rooms, roomsToDelete, x;
+    var i, index, j, k, leaf, leafs, len, ref, rooms, roomsToDelete, x;
     rooms = [];
     leafs = tree.getLeafs();
     roomsToDelete = Math.round(leafs.length * cfg.ROOM_DELETING_RATIO);
-    for (x = k = 0, ref = roomsToDelete; 0 <= ref ? k < ref : k > ref; x = 0 <= ref ? ++k : --k) {
-      index = randomValue(0, leafs.length);
+    for (x = j = 0, ref = roomsToDelete; 0 <= ref ? j < ref : j > ref; x = 0 <= ref ? ++j : --j) {
+      index = utils.randomValue(leafs.length);
       leafs[index].kill();
       leafs.splice(index, 1);
     }
-    for (i = l = 0, len = leafs.length; l < len; i = ++l) {
+    for (i = k = 0, len = leafs.length; k < len; i = ++k) {
       leaf = leafs[i];
       rooms[i] = spawnRoom(leaf.node);
-      rooms[i].drawOnMap(tilemap);
+      tilemap.drawRect(rooms[i]);
     }
     return rooms;
   };
 
   generatePaths = function(tree, tilemap) {
-    var _, i, k, l, len, len1, path, paths, sectorList;
+    var _, i, j, k, len, len1, path, paths, sectorList;
     paths = [];
     sectorList = tree.getNodeList();
-    for (i = k = 0, len = sectorList.length; k < len; i = ++k) {
+    for (i = j = 0, len = sectorList.length; j < len; i = ++j) {
       _ = sectorList[i];
       paths.push(new Path(sectorList[i].center, sectorList[(i + 1) % sectorList.length].center));
     }
-    for (l = 0, len1 = paths.length; l < len1; l++) {
-      path = paths[l];
-      path.drawOnMap(tilemap);
+    for (k = 0, len1 = paths.length; k < len1; k++) {
+      path = paths[k];
+      tilemap.drawPath(path);
     }
     return paths;
   };
@@ -157,7 +152,7 @@
   split = function(sector, horizontalDir, steps) {
     var div1, div2, restriction;
     if (horizontalDir == null) {
-      horizontalDir = randomTest(50);
+      horizontalDir = utils.randomTest();
     }
     if (steps == null) {
       steps = cfg.PARTITION_LEVEL;
@@ -165,21 +160,21 @@
     if (horizontalDir) {
       if (sector.h / sector.w < 2 * cfg.RATIO_RESTR) {
         return split(sector, !horizontalDir, steps);
-      } else if ((steps === 0) || (sector.h < cfg.SECTOR_MAX_SIZE && randomTest(cfg.BIG_ROOM_CHANCE)) || (sector.h < 2 * cfg.SECTOR_MIN_SIZE)) {
+      } else if ((steps === 0) || (sector.h < cfg.SECTOR_MAX_SIZE && utils.randomTest(cfg.BIG_ROOM_CHANCE)) || (sector.h < 2 * cfg.SECTOR_MIN_SIZE)) {
         return [sector];
       } else {
         restriction = Math.max(cfg.ROOM_MIN_SIZE, Math.ceil(sector.h * cfg.RATIO_RESTR));
-        div1 = new Rect(sector.x, sector.y, sector.w, randomValue(restriction, sector.h - restriction));
+        div1 = new Rect(sector.x, sector.y, sector.w, utils.randomValue(restriction, sector.h - restriction));
         div2 = new Rect(sector.x, sector.y + div1.h, sector.w, sector.h - div1.h);
       }
     } else {
       if (sector.w / sector.h < 2 * cfg.RATIO_RESTR) {
         return split(sector, !horizontalDir, steps);
-      } else if ((steps === 0) || (sector.w < cfg.SECTOR_MAX_SIZE && randomTest(cfg.BIG_ROOM_CHANCE)) || (sector.w < 2 * cfg.SECTOR_MIN_SIZE)) {
+      } else if ((steps === 0) || (sector.w < cfg.SECTOR_MAX_SIZE && utils.randomTest(cfg.BIG_ROOM_CHANCE)) || (sector.w < 2 * cfg.SECTOR_MIN_SIZE)) {
         return [sector];
       } else {
         restriction = Math.max(cfg.ROOM_MIN_SIZE, Math.ceil(sector.w * cfg.RATIO_RESTR));
-        div1 = new Rect(sector.x, sector.y, randomValue(restriction, sector.w - restriction), sector.h);
+        div1 = new Rect(sector.x, sector.y, utils.randomValue(restriction, sector.w - restriction), sector.h);
         div2 = new Rect(sector.x + div1.w, sector.y, sector.w - div1.w, sector.h);
       }
     }

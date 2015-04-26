@@ -5,7 +5,7 @@ $(document).ready(function(){
 	var generateMap = function() {
 		CANVAS_SIZE = parseInt($("#cnvs").attr("width"));
 		MAP_SIZE = parseInt($("#mapSize").val());
-		TILE_SIZE = CANVAS_SIZE / MAP_SIZE;
+		tile_size = TILE_SIZE();
 		switch ($("#algorythm").val()) {
 		case "BSP":
 			COFFE_BSP.config.ITERATIONS = parseInt($("#bspIterations").val());
@@ -15,7 +15,7 @@ $(document).ready(function(){
 				parseFloat($("#ratioRest").val()) : 0;*/
 			COFFE_BSP.config.ROOM_DELETING_RATIO = $("#deletingEnabled").prop("checked") ?
 				parseFloat($("#deletingRatio").val()) : 0;
-			paint(COFFE_BSP.generate(MAP_SIZE), c);
+			COFFE_BSP.generate(MAP_SIZE, c);
 			/*paint(TinyBSP.generateMap(MAP_SIZE), c);*/
 			break;
 		}

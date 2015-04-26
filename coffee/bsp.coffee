@@ -55,27 +55,24 @@ class Tree
           @childs.push(new Tree(node).grow(iterations-1, splitFunction))
     @
 
-generateMap = (size) ->
-  tilemap = []
-  for i in [0...size]
-    tilemap[i] = []
-    for j in [0...size]
-      tilemap[i][j] = TILE_NULL
+generateMap = (size, c) ->
+  tilemap = new TileMap(size, size)
   tree = new Tree(new Rect(0, 0, size, size)).grow(cfg.ITERATIONS,split)
   rooms = generateRooms(tree, tilemap)
   tree.removeDeadLeafs()
   paths = generatePaths(tree, tilemap)
-  tilemap
+  tilemap.drawWalls()
+  tilemap.paint(c)
 
 spawnRoom = (sector) ->
   reduction = Math.min (
     Math.floor (sector.w * cfg.ROOM_REDUCTION),
       Math.floor (sector.h * cfg.ROOM_REDUCTION))
-  x = sector.x + randomValue 2, reduction
+  x = sector.x + utils.randomValue(2, reduction)
   y = sector.y + x - sector.x
   w = sector.w - 2 * (x - sector.x)
   h = sector.h - 2 * (y - sector.y)
-  new Room x, y, w, h
+  new Rect x, y, w, h
 
 generateRooms = (tree, tilemap) ->
   rooms = []
@@ -83,13 +80,13 @@ generateRooms = (tree, tilemap) ->
   roomsToDelete = Math.round(leafs.length * cfg.ROOM_DELETING_RATIO)
   # Delete some rooms
   for x in [0...roomsToDelete]
-    index = randomValue(0, leafs.length)
+    index = utils.randomValue(leafs.length)
     leafs[index].kill()
     leafs.splice(index, 1)
   # Generate rooms
   for leaf, i in leafs
     rooms[i] = spawnRoom(leaf.node)
-    rooms[i].drawOnMap(tilemap)
+    tilemap.drawRect(rooms[i])
   rooms
 
 generatePaths = (tree, tilemap) ->
@@ -100,10 +97,10 @@ generatePaths = (tree, tilemap) ->
     paths.push(new Path(sectorList[i].center,
       sectorList[(i+1) % sectorList.length].center))
   # Paint paths
-  path.drawOnMap(tilemap) for path in paths
+  tilemap.drawPath(path) for path in paths
   paths
 
-split = (sector, horizontalDir = randomTest(50), steps = cfg.PARTITION_LEVEL) ->
+split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL) ->
   # Split horizontally
   if horizontalDir
     # If too narrow to split in this direction, try to split in another one
@@ -111,7 +108,7 @@ split = (sector, horizontalDir = randomTest(50), steps = cfg.PARTITION_LEVEL) ->
       return split(sector, !horizontalDir, steps)
     # If stop splitting
     else if (steps is 0) or
-    (sector.h < cfg.SECTOR_MAX_SIZE and randomTest(cfg.BIG_ROOM_CHANCE)) or
+    (sector.h < cfg.SECTOR_MAX_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
     (sector.h < 2*cfg.SECTOR_MIN_SIZE)
       return [sector]
     # Finally split
@@ -119,7 +116,7 @@ split = (sector, horizontalDir = randomTest(50), steps = cfg.PARTITION_LEVEL) ->
       restriction = Math.max(cfg.ROOM_MIN_SIZE,
         Math.ceil(sector.h * cfg.RATIO_RESTR))
       div1 = new Rect(sector.x, sector.y, sector.w,
-        randomValue(restriction, sector.h - restriction))
+        utils.randomValue(restriction, sector.h - restriction))
       div2 = new Rect(sector.x, sector.y + div1.h, sector.w, sector.h - div1.h)
   # Split vertically
   else
@@ -128,7 +125,7 @@ split = (sector, horizontalDir = randomTest(50), steps = cfg.PARTITION_LEVEL) ->
       return split(sector, !horizontalDir, steps)
       # If stop splitting
     else if (steps is 0) or
-    (sector.w < cfg.SECTOR_MAX_SIZE and randomTest(cfg.BIG_ROOM_CHANCE)) or
+    (sector.w < cfg.SECTOR_MAX_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
     (sector.w < 2*cfg.SECTOR_MIN_SIZE)
       return [sector]
       # Finally split
@@ -136,7 +133,7 @@ split = (sector, horizontalDir = randomTest(50), steps = cfg.PARTITION_LEVEL) ->
       restriction = Math.max(cfg.ROOM_MIN_SIZE,
         Math.ceil(sector.w * cfg.RATIO_RESTR))
       div1 = new Rect(sector.x, sector.y,
-        randomValue(restriction, sector.w - restriction), sector.h)
+        utils.randomValue(restriction, sector.w - restriction), sector.h)
       div2 = new Rect(sector.x + div1.w, sector.y, sector.w - div1.w, sector.h)
   split(div1, !horizontalDir, steps-1).concat(split(div2, !horizontalDir, steps-1))
 
