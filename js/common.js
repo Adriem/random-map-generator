@@ -8,9 +8,15 @@
     return CANVAS_SIZE / MAP_SIZE;
   };
 
-  this.DRAW_GRID = true;
+  this.GRID_WIDTH = function() {
+    return CANVAS_SIZE / 1;
+  };
 
-  this.DRAW_WALLS = true;
+  this.SHOW_GRID = true;
+
+  this.SHOW_WALLS = true;
+
+  this.SHOW_DOORS = true;
 
   this.ALGORYTHM = "BSP";
 
@@ -19,7 +25,7 @@
     BACKGROUND: "#000",
     WALL: "#833",
     GROUND: "#CCC",
-    DOOR: "#228"
+    DOOR: "#66B"
   };
 
   this.tile = {
@@ -131,26 +137,10 @@
       if (fillTile == null) {
         fillTile = tile.GROUND;
       }
-      if (path.start.x < path.end.x) {
-        x1 = path.start.x;
-      } else {
-        x1 = path.end.x;
-      }
-      if (path.start.x < path.end.x) {
-        x2 = path.end.x;
-      } else {
-        x2 = path.start.x;
-      }
-      if (path.start.y < path.end.y) {
-        y1 = path.start.y;
-      } else {
-        y1 = path.end.y;
-      }
-      if (path.start.y < path.end.y) {
-        y2 = path.end.y;
-      } else {
-        y2 = path.start.y;
-      }
+      x1 = path.start.x < path.end.x ? path.start.x : path.end.x;
+      x2 = path.start.x < path.end.x ? path.end.x : path.start.x;
+      y1 = path.start.y < path.end.y ? path.start.y : path.end.y;
+      y2 = path.start.y < path.end.y ? path.end.y : path.start.y;
       for (index = k = ref = y1, ref1 = y2; ref <= ref1 ? k <= ref1 : k >= ref1; index = ref <= ref1 ? ++k : --k) {
         this.tilemap[index][path.start.x] = fillTile;
       }
@@ -178,8 +168,24 @@
       return void 0;
     };
 
+    TileMap.prototype.paintGrid = function(c) {
+      var i, k, ref, tileSize;
+      tileSize = TILE_SIZE();
+      c.beginPath();
+      c.strokeStyle = color.GRID;
+      c.lineWidth = 1;
+      for (i = k = 0, ref = this.w; 0 <= ref ? k < ref : k > ref; i = 0 <= ref ? ++k : --k) {
+        c.moveTo(i * tileSize, 0);
+        c.lineTo(i * tileSize, MAP_SIZE * tileSize);
+        c.moveTo(0, i * tileSize);
+        c.lineTo(MAP_SIZE * tileSize, i * tileSize);
+      }
+      c.stroke();
+      return c.closePath();
+    };
+
     TileMap.prototype.paint = function(c) {
-      var col, i, j, k, l, len, len1, o, ref, ref1, ref2, row, tileSize;
+      var col, i, j, k, l, len, len1, ref, ref1, row, tileSize;
       tileSize = TILE_SIZE();
       c.fillStyle = color.BACKGROUND;
       c.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
@@ -193,11 +199,11 @@
             case tile.GROUND:
               c.fillStyle = color.GROUND;
               break;
-            case tile.WALL:
-              c.fillStyle = color.WALL;
-              break;
             case tile.DOOR:
-              c.fillStyle = color.DOOR;
+              c.fillStyle = SHOW_DOORS ? color.DOOR : color.GROUND;
+              break;
+            case tile.WALL:
+              c.fillStyle = SHOW_WALLS ? color.WALL : color.BACKGROUND;
               break;
             default:
               c.fillStyle = color.BACKGROUND;
@@ -205,18 +211,8 @@
           c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
         }
       }
-      if (DRAW_GRID) {
-        c.beginPath();
-        c.strokeStyle = color.GRID;
-        c.lineWidth = 0.5;
-        for (i = o = 0, ref2 = MAP_SIZE; 0 <= ref2 ? o < ref2 : o > ref2; i = 0 <= ref2 ? ++o : --o) {
-          c.moveTo(i * tileSize, 0);
-          c.lineTo(i * tileSize, MAP_SIZE * tileSize);
-          c.moveTo(0, i * tileSize);
-          c.lineTo(MAP_SIZE * tileSize, i * tileSize);
-        }
-        c.stroke();
-        return c.closePath();
+      if (SHOW_GRID) {
+        return this.paintGrid(c);
       }
     };
 

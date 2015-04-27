@@ -1,4 +1,4 @@
-#cnvs {
+#canvas {
     width:100%;
     height: auto;
 }
@@ -9,4 +9,9 @@
 
 .page-header {
     border-color: #ccc;
+}
+
+.form-inline div {
+    padding-left:10px;
+    padding-right:10px
 }

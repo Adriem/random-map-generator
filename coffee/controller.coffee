@@ -1,30 +1,56 @@
 $(document).ready ->
   # DEFINITIONS
   c = $("#canvas")[0].getContext("2d")
+  map = undefined
   generateMap = () ->
-    CANVAS_SIZE = parseInt($("#canvas").attr("width"))
-    MAP_SIZE = parseInt($("#mapSize").val())
-    tileSize = TILE_SIZE()
+    @CANVAS_SIZE = parseInt($("#canvas").attr("width"))
+    @MAP_SIZE = parseInt($("#mapSize").val())
     switch $("#algorythm").val()
       when "BSP"
         #ITERATIONS
-        BSP.config.ITERATIONS = parseInt($("#bspIterations").val())
+        bsp.config.ITERATIONS = parseInt($("#bspIterations").val())
         # ROOM DELETING RATIO
         if $("#deletingEnabled").prop("checked")
-          BSP.config.ROOM_DELETING_RATIO = parseFloat($("#deletingRatio").val())
+          bsp.config.ROOM_DELETING_RATIO = parseFloat($("#deletingRatio").val())
         else
-          BSP.config.ROOM_DELETING_RATIO = 0
-        BSP.generate(MAP_SIZE, c)
+          bsp.config.ROOM_DELETING_RATIO = 0
+        if $("#doorsEnabled").prop("checked")
+          bsp.config.DOOR_CHANCE = parseInt($("#doorChance").val())
+        else
+          bsp.config.DOOR_CHANCE = 0
+        bsp.config.DRAW_WALLS = $("#drawWalls").prop("checked")
+        map = bsp.generate(MAP_SIZE)
+        map.paint(c)
 
-  # Set default data
+  # Set default values
   $("#mapSize").val(MAP_SIZE)
-  $("#bspIterations").val(BSP.config.ITERATIONS)
-  if BSP.config.ROOM_DELETING_RATIO > 0
+  if window.SHOW_GRID
+    $("#showGrid").prop("checked", "on")
+  else
+    $("#showGrid").removeProp("checked", "on")
+  if window.SHOW_WALLS
+    $("#showWalls").prop("checked", "on")
+  else
+    $("#showWalls").removeProp("checked", "on")
+  if window.SHOW_DOORS
+    $("#showDoors").prop("checked", "on")
+  else
+    $("#showDoors").removeProp("checked", "on")
+  $("#bspIterations").val(bsp.config.ITERATIONS)
+  $("#deletingRatio").val(bsp.config.ROOM_DELETING_RATIO)
+  if bsp.config.ROOM_DELETING_RATIO > 0
     $("#deletingEnabled").prop("checked", "on")
-    $("#deletingRatio").val(BSP.config.ROOM_DELETING_RATIO)
   else
     $("#ratioRestEnabled").removeProp("checked", "on")
-    $("#ratioRest").val(BSP.config.RATIO_RESTR)
+  $("#doorChance").val(bsp.config.DOOR_CHANCE)
+  if bsp.config.DOOR_CHANCE > 0
+    $("#doorsEnabled").prop("checked", "on")
+  else
+    $("#doorsEnabled").removeProp("checked", "on")
+  if bsp.config.DRAW_WALLS
+    $("#drawWalls").prop("checked", "on")
+  else
+    $("#drawWalls").removeProp("checked", "on")
 
   # Disable fields with enable-checkbox
   $("#deletingEnabled").change ->
@@ -32,9 +58,23 @@ $(document).ready ->
       $("#deletingRatio").removeAttr("disabled", "")
     else
       $("#deletingRatio").attr("disabled", "")
+  $("#doorsEnabled").change ->
+    if $("#doorsEnabled").prop("checked")
+      $("#doorChance").removeAttr("disabled", "")
+    else
+      $("#doorChance").attr("disabled", "")
 
-  # Bind function to button
+  # Bind functions to buttons
   $("#generate").click(generateMap)
+  $("#showGrid").change ->
+    window.SHOW_GRID = $("#showGrid").prop("checked")
+    map.paint(c)
+  $("#showWalls").change ->
+    window.SHOW_WALLS = $("#showWalls").prop("checked")
+    map.paint(c)
+  $("#showDoors").change ->
+    window.SHOW_DOORS = $("#showDoors").prop("checked")
+    map.paint(c)
   # Enable tooltips with bootstrap
   $('[data-togle="tooltip"]').tooltip()
   # Generate map on page load

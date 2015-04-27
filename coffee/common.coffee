@@ -2,8 +2,10 @@
 @MAP_SIZE = 50
 @CANVAS_SIZE = 400
 @TILE_SIZE = () -> CANVAS_SIZE / MAP_SIZE
-@DRAW_GRID = true
-@DRAW_WALLS = true
+@GRID_WIDTH = () -> CANVAS_SIZE / 1
+@SHOW_GRID = true
+@SHOW_WALLS = true
+@SHOW_DOORS = true
 @ALGORYTHM = "BSP"
 
 # TILE COLORS
@@ -12,7 +14,7 @@
   BACKGROUND: "#000"
   WALL: "#833"
   GROUND: "#CCC"
-  DOOR: "#228"
+  DOOR: "#66B"
 
 # TILE VALUES
 @tile =
@@ -58,10 +60,10 @@ class @TileMap
         @tilemap[i][j] = fillTile
 
   drawPath: (path, fillTile = tile.GROUND) ->
-    if path.start.x < path.end.x then x1 = path.start.x else x1 = path.end.x
-    if path.start.x < path.end.x then x2 = path.end.x else x2 = path.start.x
-    if path.start.y < path.end.y then y1 = path.start.y else y1 = path.end.y
-    if path.start.y < path.end.y then y2 = path.end.y else y2 = path.start.y
+    x1 = if path.start.x < path.end.x then path.start.x else path.end.x
+    x2 = if path.start.x < path.end.x then path.end.x else path.start.x
+    y1 = if path.start.y < path.end.y then path.start.y else path.end.y
+    y2 = if path.start.y < path.end.y then path.end.y else path.start.y
     #pathTile[path.start.x] = fillTile for pathTile in @tilemap[y1..y2]
     #pathTile = fillTile for pathTile in @tilemap[path.end.y][x1..x2]
     @tilemap[index][path.start.x] = fillTile for index in [y1..y2]
@@ -79,6 +81,19 @@ class @TileMap
             @tilemap[i+m][j+n] = tile.WALL
     undefined # Avoiding push operations and wrong return
 
+  paintGrid: (c) ->
+    tileSize = TILE_SIZE()
+    c.beginPath()
+    c.strokeStyle = color.GRID
+    c.lineWidth = 1
+    for i in [0...@w]
+      c.moveTo(i * tileSize, 0)
+      c.lineTo(i * tileSize, MAP_SIZE * tileSize)
+      c.moveTo(0, i * tileSize)
+      c.lineTo(MAP_SIZE * tileSize, i * tileSize)
+    c.stroke()
+    c.closePath()
+
   paint: (c) ->
     tileSize = TILE_SIZE()
     c.fillStyle = color.BACKGROUND
@@ -87,18 +102,11 @@ class @TileMap
       for col, j in @tilemap[i]
         switch @tilemap[i][j]
           when tile.GROUND then c.fillStyle = color.GROUND
-          when tile.WALL then c.fillStyle = color.WALL
-          when tile.DOOR then c.fillStyle = color.DOOR
+          when tile.DOOR
+            c.fillStyle = if SHOW_DOORS then color.DOOR else color.GROUND
+          when tile.WALL
+            c.fillStyle = if SHOW_WALLS then color.WALL else color.BACKGROUND
           else c.fillStyle = color.BACKGROUND
         c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize)
-    if DRAW_GRID
-      c.beginPath()
-      c.strokeStyle = color.GRID
-      c.lineWidth = 0.5
-      for i in [0...MAP_SIZE]
-        c.moveTo(i * tileSize, 0)
-        c.lineTo(i * tileSize, MAP_SIZE * tileSize)
-        c.moveTo(0, i * tileSize)
-        c.lineTo(MAP_SIZE * tileSize, i * tileSize)
-      c.stroke()
-      c.closePath()
+
+    @paintGrid(c) if SHOW_GRID

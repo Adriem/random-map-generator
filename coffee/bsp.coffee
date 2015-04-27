@@ -8,7 +8,8 @@ cfg =
   SECTOR_MAX_SIZE: 16
   BIG_ROOM_CHANCE: 25
   ROOM_DELETING_RATIO: 0.4
-  DOOR_CHANCE: 60
+  DOOR_CHANCE: 100
+  DRAW_WALLS: true
 
 class Tree
   constructor: (@node) ->
@@ -60,13 +61,14 @@ generateMap = (size, c) ->
   rooms = generateRooms(tree, tilemap)
   tree.removeDeadLeafs()
   paths = generatePaths(tree, tilemap)
-  tilemap.drawWalls()
-  tilemap.paint(c)
+  doors = generateDoors(tilemap.tilemap)
+  tilemap.drawWalls() if cfg.DRAW_WALLS
+  tilemap
 
 spawnRoom = (sector) ->
   reduction = Math.min (
     Math.floor (sector.w * cfg.ROOM_REDUCTION),
-      Math.floor (sector.h * cfg.ROOM_REDUCTION))
+    Math.floor (sector.h * cfg.ROOM_REDUCTION))
   x = sector.x + utils.randomValue(2, reduction)
   y = sector.y + x - sector.x
   w = sector.w - 2 * (x - sector.x)
@@ -98,6 +100,38 @@ generatePaths = (tree, tilemap) ->
   # Paint paths
   tilemap.drawPath(path) for path in paths
   paths
+
+generateDoors = (tilemap) ->
+  LOOKAHEAD = 3
+  doors = []
+  for i in [LOOKAHEAD...tilemap.length-LOOKAHEAD]
+    for j in [LOOKAHEAD...tilemap[i].length-LOOKAHEAD] when tilemap[i][j] is tile.GROUND
+      total = [0,0,0,0]
+      # Horizontal direction
+      if tilemap[i-1][j] is tilemap[i+1][j] is tile.NULL and
+          tilemap[i][j-1] is tilemap[i][j+1] is tile.GROUND
+        for n in [-LOOKAHEAD..-1]
+          total[0]++ if tilemap[i-1][j+n] isnt tile.NULL
+          total[1]++ if tilemap[i+1][j+n] isnt tile.NULL
+        for n in [1..LOOKAHEAD]
+          total[2]++ if tilemap[i-1][j+n] isnt tile.NULL
+          total[3]++ if tilemap[i+1][j+n] isnt tile.NULL
+      # Vertical direction
+      else if tilemap[i][j-1] is tilemap[i][j+1] is tile.NULL and
+          tilemap[i-1][j] is tilemap[i+1][j] is tile.GROUND
+        for n in [-LOOKAHEAD..-1]
+          total[0]++ if tilemap[i+n][j-1] isnt tile.NULL
+          total[1]++ if tilemap[i+n][j+1] isnt tile.NULL
+        for n in [1..LOOKAHEAD]
+          total[2]++ if tilemap[i+n][j-1] isnt tile.NULL
+          total[3]++ if tilemap[i+n][j+1] isnt tile.NULL
+      # Check if must place room
+      if (total[0] >= LOOKAHEAD or total[1] >= LOOKAHEAD or
+          total[2] >= LOOKAHEAD or total[3] >= LOOKAHEAD) and
+          utils.randomTest(cfg.DOOR_CHANCE)
+        tilemap[i][j] = tile.DOOR
+        doors.push(new Point(j,i))
+  doors
 
 split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL) ->
   # Split horizontally
@@ -137,7 +171,7 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
   split(div1, !horizontalDir, steps-1).concat(split(div2, !horizontalDir, steps-1))
 
 ### EXPORT ###
-@BSP =
+@bsp =
   config: cfg
   generate: generateMap
   Tree: Tree
