@@ -3,8 +3,8 @@ $(document).ready ->
   c = $("#canvas")[0].getContext("2d")
   map = undefined
   generateMap = () ->
-    @CANVAS_SIZE = parseInt($("#canvas").attr("width"))
-    @MAP_SIZE = parseInt($("#mapSize").val())
+    window.CANVAS_SIZE = parseInt($("#canvas").attr("width"))
+    window.MAP_SIZE = parseInt($("#mapSize").val())
     switch $("#algorythm").val()
       when "BSP"
         #ITERATIONS
@@ -23,7 +23,7 @@ $(document).ready ->
         map.paint(c)
 
   # Set default values
-  $("#mapSize").val(MAP_SIZE)
+  $("#mapSize").val(window.MAP_SIZE)
   if window.SHOW_GRID
     $("#showGrid").prop("checked", "on")
   else

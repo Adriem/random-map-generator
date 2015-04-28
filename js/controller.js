@@ -5,8 +5,8 @@
     c = $("#canvas")[0].getContext("2d");
     map = void 0;
     generateMap = function() {
-      this.CANVAS_SIZE = parseInt($("#canvas").attr("width"));
-      this.MAP_SIZE = parseInt($("#mapSize").val());
+      window.CANVAS_SIZE = parseInt($("#canvas").attr("width"));
+      window.MAP_SIZE = parseInt($("#mapSize").val());
       switch ($("#algorythm").val()) {
         case "BSP":
           bsp.config.ITERATIONS = parseInt($("#bspIterations").val());
@@ -25,7 +25,7 @@
           return map.paint(c);
       }
     };
-    $("#mapSize").val(MAP_SIZE);
+    $("#mapSize").val(window.MAP_SIZE);
     if (window.SHOW_GRID) {
       $("#showGrid").prop("checked", "on");
     } else {
