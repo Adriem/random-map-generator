@@ -8,7 +8,18 @@
 }
 
 .page-header {
-    border-color: #ccc;
+    /*border:0px solid #ccc;
+    /*border-color: #ccc;*/
+}
+
+.page-footer {
+    border-top:1px solid #eee;
+    padding:20px
+}
+
+.page-footer a {
+    padding-left: 5px;
+    padding-right: 5px
 }
 
 .form-inline div {

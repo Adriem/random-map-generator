@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="es">
+<html lang="es" xmlns:http="http://www.w3.org/1999/xhtml">
 <head>
 	<title>Adriem's map generator</title> 
 	<meta charset="UTF-8"> 
@@ -19,7 +19,7 @@
 
 </head>
 <body>
-	<!-- NAVBAR -->
+	<!-- NAVBAR --
 	<nav class="navbar navbar-inverse navbar-fixed-top"><div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -37,16 +37,49 @@
 		    </ul>
 		    <ul class="nav navbar-nav navbar-right">
 		        <li><a href="http://www.github.com/adriem/random-map-generator"><span class="fa fa-github fa-lg"></span> View on GitHub!</a></li>
-		        <!--<li><a href="#">Check my projects!</a></li> -->
+		        <!--<li><a href="#">Check my projects!</a></li> --
 		    </ul>
 	    </div>
-	</div></nav>
+	</div></nav> -->
+
+	<!-- ABOUT MODAL -->
+	<div class="modal fade" id="aboutModal">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title">About Adriem's map generator</h4>
+		  </div>
+		  <div class="modal-body">
+			  <p>Hey, thank you for checking this page! This is a little project I started to experiment with web technologies while I tried some algorythms of random map generation. Make sure you have javascript enabled on this page for this to work.</p>
+			  <p>This isn't intended to be the most efficient map generator nor the most flexible one. I'm also not trying to teach anything to anybody. This is just the result of some research and experimentation by my own. Please, keep this in mind, specially if you are going to use the code, which is available <a href="http://www.github.com/adriem/random-map-generator">on GitHub</a>. This project is still in developement, and I intend to add some fancy features in the future, like adding some more algorythms! :-D</p>
+			  <p>That said, <strong>I really hope you enjoy playing around with this little generator and find it useful! </strong> If you have any suggestions, comments or just want to tell me how wonderful this project is, feel free to email me, I'll reply as soon as I can. You can check some personal information in contact page.</p>
+			  <p>Once again, thanks a lot for visiting this project.</p>
+		  </div>
+		</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<!-- CONTACT MODAL -->
+	<div class="modal fade" id="contactModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">About Adriem's map generator</h4>
+				</div>
+				<div class="modal-body">
+					<p>Coming soon...</p>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 	<!-- CONTENT -->
-	<div class="container" style="padding-top: 70px; padding-bottom: 40px">
+	<div class="container" style="padding-bottom: 40px">
 
 		<!-- TITLE -->
-		<div class="page-header">
+		<div class="page-header text-center">
 			<h1 class="text-center">Adriem's map generator [v.BETA]</h1>
 		</div>
 
@@ -148,10 +181,10 @@
 			
 		</div>
 		<!-- CANVAS -->
-		<div class="canvas_wrapper col-lg-4 col-md-5 col-sm-6">
-			<div class="row"><canvas width="750" height="750" id="canvas"/></div>
+		<div class="canvas_wrapper col-lg-4 col-md-5 col-sm-6 col-xs-12">
+			<canvas width="750" height="750" id="canvas"></canvas>
 
-			<form class="row form-inline text-center">
+			<form class="form-inline text-center">
 				<div class="checkbox">
 					<label>
 						<input type="checkbox" id="showGrid"> Show grid
@@ -169,6 +202,22 @@
 				</div>
 			</form>
 		</div>
+	</div>
+	<div class="container page-footer hidden-xs">
+		<div class="pull-left">
+			<a href="http://www.github.com/adriem/random-map-generator" data-toggle="modal" data-target="#aboutModal">About this generator...</a>
+		</div>
+		<div class="text-right">
+			<a href="http://www.github.com/adriem/random-map-generator" data-toggle="modal" data-target="#contactModal"><span class="fa fa-envelope"></span> Contact me </a>
+			<a href="http://www.github.com/adriem/random-map-generator"><span class="fa fa-github fa-lg"></span> View on GitHub! </a>
+		</div>
+	</div>
+	<div class="container page-footer visible-xs text-center">
+		<ul class="nav nav-pills nav-stacked">
+			<li><a href="http://www.github.com/adriem/random-map-generator" data-toggle="modal" data-target="#aboutModal">About this generator...</a></li>
+			<li><a href="http://www.github.com/adriem/random-map-generator" data-toggle="modal" data-target="#contactModal"><span class="fa fa-envelope"></span> Contact me </a></li>
+			<li><a href="http://www.github.com/adriem/random-map-generator"><span class="fa fa-github fa-lg"></span> View on GitHub! </a></li>
+		</ul>
 	</div>
 </body>
 </html>
