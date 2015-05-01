@@ -1,12 +1,13 @@
 cfg =
-  ITERATIONS: 4
-  RATIO_RESTR: 0.45
+  RATIO_RESTR: 0.35
   PARTITION_LEVEL: 2
   ROOM_REDUCTION: 0.4
   ROOM_MIN_SIZE: 5
-  SECTOR_MIN_SIZE: 9
+  SECTOR_MIN_SIZE: 10
+  MIN_SECTOR_REDUCTION: 2
+  MAX_SECTOR_REDUCTION: 5
   SECTOR_MAX_SIZE: 16
-  BIG_ROOM_CHANCE: 25
+  BIG_ROOM_CHANCE: 40
   ROOM_DELETING_RATIO: 0.4
   DOOR_CHANCE: 100
   DRAW_WALLS: true
@@ -44,35 +45,51 @@ class Tree
         @childs.splice i, 1 if child.isLeaf() and child.isEmpty()
     undefined # Avoiding push operations and wrong return
 
-  grow: (iterations, splitFunction) ->
-    if iterations > 0
-      childNodes = splitFunction(@node)
-      if childNodes? and 0 < childNodes.length <= 1
-        @node = childNodes[0]
-        # retVal = @grow(iterations-1, splitFunction)
-      else if childNodes? and childNodes.length > 1
-        for node in childNodes
-          @childs.push(new Tree(node).grow(iterations-1, splitFunction))
+  grow: (splitFunction) ->
+    childNodes = splitFunction(@node)
+    if childNodes? and 0 < childNodes.length <= 1
+      @node = childNodes[0]
+      # retVal = @grow(iterations-1, splitFunction)
+    else if childNodes? and childNodes.length > 1
+      for node in childNodes
+        @childs.push(new Tree(node).grow(splitFunction))
     @
 
+  paint: (c) ->
+    tileSize = TILE_SIZE()
+    c.beginPath()
+    c.strokeStyle = "#0f0"
+    c.lineWidth = 6
+    c.strokeRect(@node.x * tileSize, @node.y * tileSize,
+      @node.w * tileSize, @node.h * tileSize)
+    child.paint(c) for child in @childs
+
+
 generateMap = (size, c) ->
+
   tilemap = new TileMap(size, size)
-  tree = new Tree(new Rect(0, 0, size, size)).grow(cfg.ITERATIONS,split)
+  tree = new Tree(new Rect(0, 0, size, size)).grow(split)
   rooms = generateRooms(tree, tilemap)
   tree.removeDeadLeafs()
   paths = generatePaths(tree, tilemap)
-  doors = generateDoors(tilemap.tilemap)
+  tilemap.removeDeadEnds()
+  generateDoors(tilemap.tilemap)
+  tilemap.optimiseDoors()
   tilemap.drawWalls() if cfg.DRAW_WALLS
+  tilemap.debug.tree = tree
   tilemap
 
 spawnRoom = (sector) ->
-  reduction = Math.min (
-    Math.floor (sector.w * cfg.ROOM_REDUCTION),
-    Math.floor (sector.h * cfg.ROOM_REDUCTION))
-  x = sector.x + utils.randomValue(2, reduction)
-  y = sector.y + x - sector.x
-  w = sector.w - 2 * (x - sector.x)
-  h = sector.h - 2 * (y - sector.y)
+  if sector.w < sector.h
+    reduction = Math.round(sector.w * cfg.ROOM_REDUCTION)
+    w = Math.max(cfg.ROOM_MIN_SIZE, sector.w - 2*utils.randomValue(2, reduction))
+    h = sector.h - (sector.w - w)
+  else
+    reduction = Math.round (sector.h * cfg.ROOM_REDUCTION)
+    h = Math.max(cfg.ROOM_MIN_SIZE, sector.h - 2*utils.randomValue(2, reduction))
+    w = sector.w - (sector.h - h)
+  x = sector.x + (sector.w - w) // 2
+  y = sector.y - sector.x + x
   new Rect x, y, w, h
 
 generateRooms = (tree, tilemap) ->
@@ -125,7 +142,7 @@ generateDoors = (tilemap) ->
         for n in [1..LOOKAHEAD]
           total[2]++ if tilemap[i+n][j-1] isnt tile.NULL
           total[3]++ if tilemap[i+n][j+1] isnt tile.NULL
-      # Check if must place room
+      # If must place room
       if (total[0] >= LOOKAHEAD or total[1] >= LOOKAHEAD or
           total[2] >= LOOKAHEAD or total[3] >= LOOKAHEAD) and
           utils.randomTest(cfg.DOOR_CHANCE)
@@ -146,24 +163,24 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
       return [sector]
     # Finally split
     else
-      restriction = Math.max(cfg.ROOM_MIN_SIZE,
+      restriction = Math.max(cfg.SECTOR_MIN_SIZE,
         Math.ceil(sector.h * cfg.RATIO_RESTR))
       div1 = new Rect(sector.x, sector.y, sector.w,
         utils.randomValue(restriction, sector.h - restriction))
       div2 = new Rect(sector.x, sector.y + div1.h, sector.w, sector.h - div1.h)
-  # Split vertically
+    # Split vertically
   else
     # If too narrow to split in this direction, try to split in another one
     if sector.w/sector.h < 2 * cfg.RATIO_RESTR
       return split(sector, !horizontalDir, steps)
-      # If stop splitting
+    # If stop splitting
     else if (steps is 0) or
     (sector.w < cfg.SECTOR_MAX_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
     (sector.w < 2*cfg.SECTOR_MIN_SIZE)
       return [sector]
-      # Finally split
+    # Finally split
     else
-      restriction = Math.max(cfg.ROOM_MIN_SIZE,
+      restriction = Math.max(cfg.SECTOR_MIN_SIZE,
         Math.ceil(sector.w * cfg.RATIO_RESTR))
       div1 = new Rect(sector.x, sector.y,
         utils.randomValue(restriction, sector.w - restriction), sector.h)

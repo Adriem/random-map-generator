@@ -7,62 +7,38 @@ $(document).ready ->
     window.MAP_SIZE = parseInt($("#mapSize").val())
     switch $("#algorythm").val()
       when "BSP"
-        #ITERATIONS
-        bsp.config.ITERATIONS = parseInt($("#bspIterations").val())
+        # ROOM MIN SIZE
+        bsp.config.ROOM_MIN_SIZE = parseInt($("#roomMinSize").val())
+        # ROOM ASPECT RATIO
+        bsp.config.RATIO_RESTR = if $("#aspectRatioEnabled").prop("checked")
+          parseFloat($("#aspectRatio").val())
+        else 0
         # ROOM DELETING RATIO
-        if $("#deletingEnabled").prop("checked")
-          bsp.config.ROOM_DELETING_RATIO = parseFloat($("#deletingRatio").val())
-        else
-          bsp.config.ROOM_DELETING_RATIO = 0
-        if $("#doorsEnabled").prop("checked")
-          bsp.config.DOOR_CHANCE = parseInt($("#doorChance").val())
-        else
-          bsp.config.DOOR_CHANCE = 0
+        bsp.config.ROOM_DELETING_RATIO = if $("#deletingEnabled").prop("checked")
+          parseFloat($("#deletingRatio").val())
+        else 0
+        # DOOR CHANCE
+        bsp.config.DOOR_CHANCE = if $("#doorsEnabled").prop("checked")
+          parseInt($("#doorChance").val())
+        else 0
+        # DRAW WALLS
         bsp.config.DRAW_WALLS = $("#drawWalls").prop("checked")
         map = bsp.generate(MAP_SIZE)
         map.paint(c)
 
-  # Set default values
+  # INPUT SETUPS
   $("#mapSize").val(window.MAP_SIZE)
-  if window.SHOW_GRID
-    $("#showGrid").prop("checked", "on")
-  else
-    $("#showGrid").removeProp("checked", "on")
-  if window.SHOW_WALLS
-    $("#showWalls").prop("checked", "on")
-  else
-    $("#showWalls").removeProp("checked", "on")
-  if window.SHOW_DOORS
-    $("#showDoors").prop("checked", "on")
-  else
-    $("#showDoors").removeProp("checked", "on")
-  $("#bspIterations").val(bsp.config.ITERATIONS)
-  $("#deletingRatio").val(bsp.config.ROOM_DELETING_RATIO)
-  if bsp.config.ROOM_DELETING_RATIO > 0
-    $("#deletingEnabled").prop("checked", "on")
-  else
-    $("#ratioRestEnabled").removeProp("checked", "on")
-  $("#doorChance").val(bsp.config.DOOR_CHANCE)
-  if bsp.config.DOOR_CHANCE > 0
-    $("#doorsEnabled").prop("checked", "on")
-  else
-    $("#doorsEnabled").removeProp("checked", "on")
-  if bsp.config.DRAW_WALLS
-    $("#drawWalls").prop("checked", "on")
-  else
-    $("#drawWalls").removeProp("checked", "on")
+  setupToggle("#showGrid", window.SHOW_GRID)
+  setupToggle("#showWalls", window.SHOW_WALLS)
+  setupToggle("#showDoors", window.SHOW_DOORS)
+  setupToggle("#showDebug", window.DEBUG_MODE)
 
-  # Disable fields with enable-checkbox
-  $("#deletingEnabled").change ->
-    if $("#deletingEnabled").prop("checked")
-      $("#deletingRatio").removeAttr("disabled", "")
-    else
-      $("#deletingRatio").attr("disabled", "")
-  $("#doorsEnabled").change ->
-    if $("#doorsEnabled").prop("checked")
-      $("#doorChance").removeAttr("disabled", "")
-    else
-      $("#doorChance").attr("disabled", "")
+  # bsp specific
+  $("#roomMinSize").val(bsp.config.ROOM_MIN_SIZE)
+  setupToggleable("#aspectRatioEnabled","#aspectRatio",bsp.config.RATIO_RESTR)
+  setupToggleable("#deletingEnabled", "#deletingRatio", bsp.config.ROOM_DELETING_RATIO)
+  setupToggleable("#doorsEnabled", "#doorChance", bsp.config.DOOR_CHANCE)
+  setupToggle("#drawWalls", bsp.config.DRAW_WALLS)
 
   # Bind functions to buttons
   $("#generate").click(generateMap)
@@ -75,7 +51,28 @@ $(document).ready ->
   $("#showDoors").change ->
     window.SHOW_DOORS = $("#showDoors").prop("checked")
     map.paint(c)
+  $("#showDebug").change ->
+    window.DEBUG_MODE = $("#showDebug").prop("checked")
+    map.paint(c)
   # Enable tooltips with bootstrap
   $('[data-togle="tooltip"]').tooltip()
   # Generate map on page load
   generateMap()
+
+
+setupToggle = (input, refVal) ->
+  $(input).prop("checked", "on") if refVal
+
+setupToggleable = (toggle, input, refVal, disabledVal = 0) ->
+  # Set default value
+  $(input).val(refVal)
+  if refVal > disabledVal
+    $(toggle).prop("checked", "on")
+  else
+    $(toggle).removeProp("checked", "on")
+  # Disable field on checkbox disable
+  $(toggle).change ->
+    if $(toggle).prop("checked")
+      $(input).removeAttr("disabled", "")
+    else
+      $(input).attr("disabled", "")

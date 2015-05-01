@@ -22,7 +22,6 @@
     padding-right: 5px
 }
 
-.form-inline div {
-    padding-left:10px;
-    padding-right:10px
+.form-inline div, .form-inline label {
+    padding:10px 10px 0;
 }

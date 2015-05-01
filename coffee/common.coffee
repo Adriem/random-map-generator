@@ -7,6 +7,7 @@
 @SHOW_WALLS = true
 @SHOW_DOORS = true
 @ALGORYTHM = "BSP"
+@DEBUG_MODE = false
 
 # TILE COLORS
 @color =
@@ -15,6 +16,7 @@
   WALL: "#833"
   GROUND: "#CCC"
   DOOR: "#66B"
+  DEBUG: "#0F0"
 
 # TILE VALUES
 @tile =
@@ -22,6 +24,7 @@
   GROUND: 0
   DOOR: 1
   WALL: 2
+  DEBUG: -128
 
 @utils =
   randomTest: (val = 0.5) ->
@@ -45,6 +48,7 @@ class @Path
 
 class @TileMap
   constructor: (@w, @h) ->
+    @debug = {}
     @tilemap = []
     for i in [0...@h]
       @tilemap[i] = []
@@ -68,11 +72,54 @@ class @TileMap
     #pathTile = fillTile for pathTile in @tilemap[path.end.y][x1..x2]
     @tilemap[index][path.start.x] = fillTile for index in [y1..y2]
     @tilemap[path.end.y][index] = fillTile for index in [x1..x2]
-
-
     undefined # Avoiding push operations and wrong return
 
-  drawWalls: () ->
+  removeDeadEnds: ->
+    for m in [1...(@tilemap.length - 1)]
+      for n in [1...(@tilemap.length - 1)] when @tilemap[m][n] isnt tile.NULL
+        current = {i:m,j:n}
+        while current?
+          next = {}
+          connections = 0
+          if @tilemap[current.i-1][current.j] isnt tile.NULL
+            connections++
+            next.i = current.i-1
+            next.j = current.j
+          if @tilemap[current.i+1][current.j] isnt tile.NULL
+            connections++
+            next.i = current.i+1
+            next.j = current.j
+          if @tilemap[current.i][current.j-1] isnt tile.NULL
+            connections++
+            next.i = current.i
+            next.j = current.j-1
+          if @tilemap[current.i][current.j+1] isnt tile.NULL
+            connections++
+            next.i = current.i
+            next.j = current.j+1
+          if connections > 1
+            current = null
+          else
+            @tilemap[current.i][current.j] = tile.NULL
+            current = next
+    undefined # Avoiding push operations and wrong return
+
+  optimiseDoors: ->
+    for i in [1...(@tilemap.length - 1)]
+      for j in [1...(@tilemap.length - 1)] when @tilemap[i][j] isnt tile.NULL
+        if @tilemap[i-1][j] is @tilemap[i+1][j] is tile.DOOR and
+            @tilemap[i][j-1] is @tilemap[i][j+1] is tile.NULL
+          @tilemap[i-1][j] = tile.GROUND
+          @tilemap[i][j] = tile.DOOR
+          @tilemap[i+1][j] = tile.GROUND
+        if @tilemap[i][j-1] is @tilemap[i][j+1] is tile.DOOR and
+            @tilemap[i-1][j] is @tilemap[i+1][j] is tile.NULL
+          @tilemap[i][j-1] = tile.GROUND
+          @tilemap[i][j] = tile.DOOR
+          @tilemap[i][j+1] = tile.GROUND
+    undefined # Avoiding push operations and wrong return
+
+  drawWalls: ->
     for i in [1...(@tilemap.length - 1)]
       for j in [1...(@tilemap.length - 1)] when @tilemap[i][j] isnt tile.NULL and
       @tilemap[i][j] isnt tile.WALL
@@ -106,7 +153,10 @@ class @TileMap
             c.fillStyle = if SHOW_DOORS then color.DOOR else color.GROUND
           when tile.WALL
             c.fillStyle = if SHOW_WALLS then color.WALL else color.BACKGROUND
+          when tile.DEBUG
+            c.fillStyle = if DEBUG_MODE then color.DEBUG else color.BACKGROUND
           else c.fillStyle = color.BACKGROUND
         c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize)
 
     @paintGrid(c) if SHOW_GRID
+    if window.DEBUG_MODE then value.paint(c) for own key, value of @debug
