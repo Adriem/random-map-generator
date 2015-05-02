@@ -1,12 +1,12 @@
 cfg =
   RATIO_RESTR: 0.45
-  PARTITION_LEVEL: 1
+  PARTITION_LEVEL: 2
   ROOM_REDUCTION: 0.3
-  ROOM_MIN_SIZE: 5
-  ROOM_MAX_SIZE: 20
-  SECTOR_MIN_SIZE: 10
+  MIN_ROOM_SIZE: 5
+  MAX_ROOM_SIZE: 20
   MIN_SECTOR_REDUCTION: 2
-  SECTOR_MAX_SIZE: 20
+  MIN_SECTOR_SIZE: 10
+  MAX_SECTOR_SIZE: 24
   BIG_ROOM_CHANCE: 60
   ROOM_DELETING_RATIO: 0.4
   DOOR_CHANCE: 100
@@ -64,12 +64,8 @@ class Tree
     child.paint(c) for child in @childs
 
 generateMap = (size) ->
-  cfg.SECTOR_MIN_SIZE = cfg.ROOM_MIN_SIZE * 2
-  cfg.SECTOR_MAX_SIZE = cfg.ROOM_MAX_SIZE + 2 * cfg.MIN_SECTOR_REDUCTION
-  console.log(cfg.ROOM_REDUCTION)
-  console.log(1 + 2 * cfg.ROOM_REDUCTION)
-  console.log(cfg.SECTOR_MIN_SIZE)
-  console.log(cfg.SECTOR_MIN_SIZE * cfg.ROOM_REDUCTION)
+  cfg.MIN_SECTOR_SIZE = cfg.MIN_ROOM_SIZE * 2
+  cfg.MAX_SECTOR_SIZE = cfg.MAX_ROOM_SIZE + 2 * cfg.MIN_SECTOR_REDUCTION
   tilemap = new TileMap(size, size)
   tree = new Tree(new Rect(0, 0, size, size)).grow(split)
   rooms = generateRooms(tree, tilemap)
@@ -84,10 +80,10 @@ generateMap = (size) ->
 
 spawnRoom = (sector) ->
   if sector.w < sector.h
-    w = utils.randomValue(cfg.ROOM_MIN_SIZE, sector.w - 2*cfg.MIN_SECTOR_REDUCTION)
+    w = utils.randomValue(cfg.MIN_ROOM_SIZE, sector.w - 2*cfg.MIN_SECTOR_REDUCTION)
     h = sector.h - (sector.w - w)
   else
-    h = utils.randomValue(cfg.ROOM_MIN_SIZE, sector.h - 2*cfg.MIN_SECTOR_REDUCTION)
+    h = utils.randomValue(cfg.MIN_ROOM_SIZE, sector.h - 2*cfg.MIN_SECTOR_REDUCTION)
     w = sector.w - (sector.h - h)
   x = sector.x + (sector.w - w) // 2
   y = sector.y - sector.x + x
@@ -159,12 +155,12 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
       return split(sector, !horizontalDir, steps)
     # If stop splitting
     else if (steps is 0) or
-    (sector.h < cfg.SECTOR_MAX_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
-    (sector.h < 2*cfg.SECTOR_MIN_SIZE)
+    (sector.h < cfg.MAX_SECTOR_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
+    (sector.h < 2*cfg.MIN_SECTOR_SIZE)
       return [sector]
     # Finally split
     else
-      restriction = Math.max(cfg.SECTOR_MIN_SIZE,
+      restriction = Math.max(cfg.MIN_SECTOR_SIZE,
         Math.ceil(sector.h * cfg.RATIO_RESTR))
       div1 = new Rect(sector.x, sector.y, sector.w,
         utils.randomValue(restriction, sector.h - restriction))
@@ -176,12 +172,12 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
       return split(sector, !horizontalDir, steps)
     # If stop splitting
     else if (steps is 0) or
-    (sector.w < cfg.SECTOR_MAX_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
-    (sector.w < 2*cfg.SECTOR_MIN_SIZE)
+    (sector.w < cfg.MAX_SECTOR_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
+    (sector.w < 2*cfg.MIN_SECTOR_SIZE)
       return [sector]
     # Finally split
     else
-      restriction = Math.max(cfg.SECTOR_MIN_SIZE,
+      restriction = Math.max(cfg.MIN_SECTOR_SIZE,
         Math.ceil(sector.w * cfg.RATIO_RESTR))
       div1 = new Rect(sector.x, sector.y,
         utils.randomValue(restriction, sector.w - restriction), sector.h)

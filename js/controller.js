@@ -11,8 +11,8 @@
       window.MAP_SIZE = parseInt($("#mapSize").val());
       switch ($("#algorythm").val()) {
         case "BSP":
-          bsp.config.ROOM_MIN_SIZE = parseInt($("#roomMinSize").val());
-          bsp.config.ROOM_MAX_SIZE = parseInt($("#roomMaxSize").val());
+          bsp.config.MIN_ROOM_SIZE = parseInt($("#roomMinSize").val());
+          bsp.config.MAX_ROOM_SIZE = parseInt($("#roomMaxSize").val());
 
           /* ROOM ASPECT RATIO
           bsp.config.RATIO_RESTR = if $("#aspectRatioEnabled").prop("checked")
@@ -30,8 +30,8 @@
     setupToggle("#showWalls", window.SHOW_WALLS);
     setupToggle("#showDoors", window.SHOW_DOORS);
     setupToggle("#showDebug", window.DEBUG_MODE);
-    $("#roomMinSize").val(bsp.config.ROOM_MIN_SIZE);
-    $("#roomMaxSize").val(bsp.config.ROOM_MAX_SIZE);
+    $("#roomMinSize").val(bsp.config.MIN_ROOM_SIZE);
+    $("#roomMaxSize").val(bsp.config.MAX_ROOM_SIZE);
     setupToggleable("#deletingEnabled", "#deletingRatio", bsp.config.ROOM_DELETING_RATIO);
     setupToggleable("#doorsEnabled", "#doorChance", bsp.config.DOOR_CHANCE);
     $("#generate").click(generateMap);

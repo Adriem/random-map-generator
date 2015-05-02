@@ -8,9 +8,9 @@ $(document).ready ->
     switch $("#algorythm").val()
       when "BSP"
         # ROOM MIN SIZE
-        bsp.config.ROOM_MIN_SIZE = parseInt($("#roomMinSize").val())
+        bsp.config.MIN_ROOM_SIZE = parseInt($("#roomMinSize").val())
         # ROOM MAX SIZE
-        bsp.config.ROOM_MAX_SIZE = parseInt($("#roomMaxSize").val())
+        bsp.config.MAX_ROOM_SIZE = parseInt($("#roomMaxSize").val())
         ### ROOM ASPECT RATIO
         bsp.config.RATIO_RESTR = if $("#aspectRatioEnabled").prop("checked")
           parseFloat($("#aspectRatio").val())
@@ -35,8 +35,8 @@ $(document).ready ->
   setupToggle("#showDebug", window.DEBUG_MODE)
 
   # bsp specific
-  $("#roomMinSize").val(bsp.config.ROOM_MIN_SIZE)
-  $("#roomMaxSize").val(bsp.config.ROOM_MAX_SIZE)
+  $("#roomMinSize").val(bsp.config.MIN_ROOM_SIZE)
+  $("#roomMaxSize").val(bsp.config.MAX_ROOM_SIZE)
   #setupToggleable("#aspectRatioEnabled","#aspectRatio",bsp.config.RATIO_RESTR)
   setupToggleable("#deletingEnabled", "#deletingRatio", bsp.config.ROOM_DELETING_RATIO)
   setupToggleable("#doorsEnabled", "#doorChance", bsp.config.DOOR_CHANCE)
