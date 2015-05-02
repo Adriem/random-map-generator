@@ -97,7 +97,7 @@
       c.strokeStyle = "#0f0";
       c.lineWidth = 6;
       c.strokeRect(this.node.x * tileSize, this.node.y * tileSize, this.node.w * tileSize, this.node.h * tileSize);
-      ref = this.childsS;
+      ref = this.childs;
       results = [];
       for (k = 0, len = ref.length; k < len; k++) {
         child = ref[k];
@@ -110,7 +110,7 @@
 
   })();
 
-  generateMap = function(size, c) {
+  generateMap = function(size) {
     var paths, rooms, tilemap, tree;
     cfg.SECTOR_MIN_SIZE = cfg.ROOM_MIN_SIZE * 2;
     cfg.SECTOR_MAX_SIZE = cfg.ROOM_MAX_SIZE + 2 * cfg.MIN_SECTOR_REDUCTION;
@@ -120,7 +120,6 @@
     console.log(cfg.SECTOR_MIN_SIZE * cfg.ROOM_REDUCTION);
     tilemap = new TileMap(size, size);
     tree = new Tree(new Rect(0, 0, size, size)).grow(split);
-    console.log(tree);
     rooms = generateRooms(tree, tilemap);
     tree.removeDeadLeafs();
     paths = generatePaths(tree, tilemap);

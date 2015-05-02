@@ -61,9 +61,9 @@ class Tree
     c.lineWidth = 6
     c.strokeRect(@node.x * tileSize, @node.y * tileSize,
       @node.w * tileSize, @node.h * tileSize)
-    child.paint(c) for child in @childsS
+    child.paint(c) for child in @childs
 
-generateMap = (size, c) ->
+generateMap = (size) ->
   cfg.SECTOR_MIN_SIZE = cfg.ROOM_MIN_SIZE * 2
   cfg.SECTOR_MAX_SIZE = cfg.ROOM_MAX_SIZE + 2 * cfg.MIN_SECTOR_REDUCTION
   console.log(cfg.ROOM_REDUCTION)
@@ -72,7 +72,6 @@ generateMap = (size, c) ->
   console.log(cfg.SECTOR_MIN_SIZE * cfg.ROOM_REDUCTION)
   tilemap = new TileMap(size, size)
   tree = new Tree(new Rect(0, 0, size, size)).grow(split)
-  console.log(tree)
   rooms = generateRooms(tree, tilemap)
   tree.removeDeadLeafs()
   paths = generatePaths(tree, tilemap)
