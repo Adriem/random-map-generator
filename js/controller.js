@@ -12,10 +12,15 @@
       switch ($("#algorythm").val()) {
         case "BSP":
           bsp.config.ROOM_MIN_SIZE = parseInt($("#roomMinSize").val());
-          bsp.config.RATIO_RESTR = $("#aspectRatioEnabled").prop("checked") ? parseFloat($("#aspectRatio").val()) : 0;
+          bsp.config.ROOM_MAX_SIZE = parseInt($("#roomMaxSize").val());
+
+          /* ROOM ASPECT RATIO
+          bsp.config.RATIO_RESTR = if $("#aspectRatioEnabled").prop("checked")
+            parseFloat($("#aspectRatio").val())
+          else 0
+           */
           bsp.config.ROOM_DELETING_RATIO = $("#deletingEnabled").prop("checked") ? parseFloat($("#deletingRatio").val()) : 0;
           bsp.config.DOOR_CHANCE = $("#doorsEnabled").prop("checked") ? parseInt($("#doorChance").val()) : 0;
-          bsp.config.DRAW_WALLS = $("#drawWalls").prop("checked");
           map = bsp.generate(MAP_SIZE);
           return map.paint(c);
       }
@@ -26,10 +31,9 @@
     setupToggle("#showDoors", window.SHOW_DOORS);
     setupToggle("#showDebug", window.DEBUG_MODE);
     $("#roomMinSize").val(bsp.config.ROOM_MIN_SIZE);
-    setupToggleable("#aspectRatioEnabled", "#aspectRatio", bsp.config.RATIO_RESTR);
+    $("#roomMaxSize").val(bsp.config.ROOM_MAX_SIZE);
     setupToggleable("#deletingEnabled", "#deletingRatio", bsp.config.ROOM_DELETING_RATIO);
     setupToggleable("#doorsEnabled", "#doorChance", bsp.config.DOOR_CHANCE);
-    setupToggle("#drawWalls", bsp.config.DRAW_WALLS);
     $("#generate").click(generateMap);
     $("#showGrid").change(function() {
       window.SHOW_GRID = $("#showGrid").prop("checked");

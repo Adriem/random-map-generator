@@ -1,16 +1,15 @@
 cfg =
-  RATIO_RESTR: 0.35
-  PARTITION_LEVEL: 2
-  ROOM_REDUCTION: 0.4
+  RATIO_RESTR: 0.45
+  PARTITION_LEVEL: 1
+  ROOM_REDUCTION: 0.3
   ROOM_MIN_SIZE: 5
+  ROOM_MAX_SIZE: 20
   SECTOR_MIN_SIZE: 10
   MIN_SECTOR_REDUCTION: 2
-  MAX_SECTOR_REDUCTION: 5
-  SECTOR_MAX_SIZE: 16
-  BIG_ROOM_CHANCE: 40
+  SECTOR_MAX_SIZE: 20
+  BIG_ROOM_CHANCE: 60
   ROOM_DELETING_RATIO: 0.4
   DOOR_CHANCE: 100
-  DRAW_WALLS: true
 
 class Tree
   constructor: (@node) ->
@@ -62,31 +61,34 @@ class Tree
     c.lineWidth = 6
     c.strokeRect(@node.x * tileSize, @node.y * tileSize,
       @node.w * tileSize, @node.h * tileSize)
-    child.paint(c) for child in @childs
-
+    child.paint(c) for child in @childsS
 
 generateMap = (size, c) ->
-
+  cfg.SECTOR_MIN_SIZE = cfg.ROOM_MIN_SIZE * 2
+  cfg.SECTOR_MAX_SIZE = cfg.ROOM_MAX_SIZE + 2 * cfg.MIN_SECTOR_REDUCTION
+  console.log(cfg.ROOM_REDUCTION)
+  console.log(1 + 2 * cfg.ROOM_REDUCTION)
+  console.log(cfg.SECTOR_MIN_SIZE)
+  console.log(cfg.SECTOR_MIN_SIZE * cfg.ROOM_REDUCTION)
   tilemap = new TileMap(size, size)
   tree = new Tree(new Rect(0, 0, size, size)).grow(split)
+  console.log(tree)
   rooms = generateRooms(tree, tilemap)
   tree.removeDeadLeafs()
   paths = generatePaths(tree, tilemap)
   tilemap.removeDeadEnds()
   generateDoors(tilemap.tilemap)
   tilemap.optimiseDoors()
-  tilemap.drawWalls() if cfg.DRAW_WALLS
+  tilemap.drawWalls()
   tilemap.debug.tree = tree
   tilemap
 
 spawnRoom = (sector) ->
   if sector.w < sector.h
-    reduction = Math.round(sector.w * cfg.ROOM_REDUCTION)
-    w = Math.max(cfg.ROOM_MIN_SIZE, sector.w - 2*utils.randomValue(2, reduction))
+    w = utils.randomValue(cfg.ROOM_MIN_SIZE, sector.w - 2*cfg.MIN_SECTOR_REDUCTION)
     h = sector.h - (sector.w - w)
   else
-    reduction = Math.round (sector.h * cfg.ROOM_REDUCTION)
-    h = Math.max(cfg.ROOM_MIN_SIZE, sector.h - 2*utils.randomValue(2, reduction))
+    h = utils.randomValue(cfg.ROOM_MIN_SIZE, sector.h - 2*cfg.MIN_SECTOR_REDUCTION)
     w = sector.w - (sector.h - h)
   x = sector.x + (sector.w - w) // 2
   y = sector.y - sector.x + x

@@ -9,10 +9,13 @@ $(document).ready ->
       when "BSP"
         # ROOM MIN SIZE
         bsp.config.ROOM_MIN_SIZE = parseInt($("#roomMinSize").val())
-        # ROOM ASPECT RATIO
+        # ROOM MAX SIZE
+        bsp.config.ROOM_MAX_SIZE = parseInt($("#roomMaxSize").val())
+        ### ROOM ASPECT RATIO
         bsp.config.RATIO_RESTR = if $("#aspectRatioEnabled").prop("checked")
           parseFloat($("#aspectRatio").val())
         else 0
+        ###
         # ROOM DELETING RATIO
         bsp.config.ROOM_DELETING_RATIO = if $("#deletingEnabled").prop("checked")
           parseFloat($("#deletingRatio").val())
@@ -21,8 +24,6 @@ $(document).ready ->
         bsp.config.DOOR_CHANCE = if $("#doorsEnabled").prop("checked")
           parseInt($("#doorChance").val())
         else 0
-        # DRAW WALLS
-        bsp.config.DRAW_WALLS = $("#drawWalls").prop("checked")
         map = bsp.generate(MAP_SIZE)
         map.paint(c)
 
@@ -35,10 +36,10 @@ $(document).ready ->
 
   # bsp specific
   $("#roomMinSize").val(bsp.config.ROOM_MIN_SIZE)
-  setupToggleable("#aspectRatioEnabled","#aspectRatio",bsp.config.RATIO_RESTR)
+  $("#roomMaxSize").val(bsp.config.ROOM_MAX_SIZE)
+  #setupToggleable("#aspectRatioEnabled","#aspectRatio",bsp.config.RATIO_RESTR)
   setupToggleable("#deletingEnabled", "#deletingRatio", bsp.config.ROOM_DELETING_RATIO)
   setupToggleable("#doorsEnabled", "#doorChance", bsp.config.DOOR_CHANCE)
-  setupToggle("#drawWalls", bsp.config.DRAW_WALLS)
 
   # Bind functions to buttons
   $("#generate").click(generateMap)
