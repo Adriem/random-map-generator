@@ -1,5 +1,5 @@
 # GLOBAL PARAMETERS
-@globalParams =
+@mapParams =
   mapSize: 50
   canvasSize: 400
   showGrid: true
@@ -7,7 +7,7 @@
   showWalls: true
   debugMode: false
 
-@TILE_SIZE = () -> globalParams.canvasSize / globalParams.mapSize
+@TILE_SIZE = () -> mapParams.canvasSize / mapParams.mapSize
 
 # COLORS
 @color =
@@ -137,28 +137,28 @@ class @TileMap
     c.lineWidth = 1
     for i in [0...@w]
       c.moveTo(i * tileSize, 0)
-      c.lineTo(i * tileSize, globalParams.mapSize * tileSize)
+      c.lineTo(i * tileSize, mapParams.mapSize * tileSize)
       c.moveTo(0, i * tileSize)
-      c.lineTo(globalParams.mapSize * tileSize, i * tileSize)
+      c.lineTo(mapParams.mapSize * tileSize, i * tileSize)
     c.stroke()
     c.closePath()
 
   paint: (c) ->
     tileSize = TILE_SIZE()
     c.fillStyle = color.BACKGROUND
-    c.fillRect(0, 0, globalParams.canvasSize, globalParams.canvasSize)
+    c.fillRect(0, 0, mapParams.canvasSize, mapParams.canvasSize)
     for row, i in @tilemap
       for col, j in @tilemap[i]
         switch @tilemap[i][j]
           when tile.GROUND then c.fillStyle = color.GROUND
           when tile.DOOR
-            c.fillStyle = if globalParams.showDoors then color.DOOR else color.GROUND
+            c.fillStyle = if mapParams.showDoors then color.DOOR else color.GROUND
           when tile.WALL
-            c.fillStyle = if globalParams.showWalls then color.WALL else color.BACKGROUND
+            c.fillStyle = if mapParams.showWalls then color.WALL else color.BACKGROUND
           when tile.DEBUG
-            c.fillStyle = if globalParams.debugMode then color.DEBUG else color.BACKGROUND
+            c.fillStyle = if mapParams.debugMode then color.DEBUG else color.BACKGROUND
           else c.fillStyle = color.BACKGROUND
         c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize)
 
-    @paintGrid(c) if globalParams.showGrid
-    value.paint(c) for own key, value of @debug if globalParams.debugMode
+    @paintGrid(c) if mapParams.showGrid
+    value.paint(c) for own key, value of @debug if mapParams.debugMode

@@ -239,7 +239,7 @@
     if (horizontalDir) {
       if (sector.h / sector.w < 2 * cfg.RATIO_RESTR) {
         return split(sector, !horizontalDir, steps);
-      } else if ((steps === 0) || (sector.h < cfg.MAX_SECTOR_SIZE && random.test(cfg.BIG_ROOM_CHANCE)) || (sector.h < 2 * cfg.MIN_SECTOR_SIZE)) {
+      } else if ((steps === 0) || (sector.h < 2 * cfg.MIN_SECTOR_SIZE) || (sector.h < cfg.MAX_SECTOR_SIZE && random.test(cfg.BIG_ROOM_CHANCE))) {
         return [sector];
       } else {
         restriction = Math.max(cfg.MIN_SECTOR_SIZE, Math.ceil(sector.h * cfg.RATIO_RESTR));
@@ -249,7 +249,7 @@
     } else {
       if (sector.w / sector.h < 2 * cfg.RATIO_RESTR) {
         return split(sector, !horizontalDir, steps);
-      } else if ((steps === 0) || (sector.w < cfg.MAX_SECTOR_SIZE && random.test(cfg.BIG_ROOM_CHANCE)) || (sector.w < 2 * cfg.MIN_SECTOR_SIZE)) {
+      } else if ((steps === 0) || (sector.w < 2 * cfg.MIN_SECTOR_SIZE) || (sector.w < cfg.MAX_SECTOR_SIZE && random.test(cfg.BIG_ROOM_CHANCE))) {
         return [sector];
       } else {
         restriction = Math.max(cfg.MIN_SECTOR_SIZE, Math.ceil(sector.w * cfg.RATIO_RESTR));

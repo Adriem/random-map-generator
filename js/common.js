@@ -2,7 +2,7 @@
 (function() {
   var hasProp = {}.hasOwnProperty;
 
-  this.globalParams = {
+  this.mapParams = {
     mapSize: 50,
     canvasSize: 400,
     showGrid: true,
@@ -12,7 +12,7 @@
   };
 
   this.TILE_SIZE = function() {
-    return globalParams.canvasSize / globalParams.mapSize;
+    return mapParams.canvasSize / mapParams.mapSize;
   };
 
   this.color = {
@@ -242,9 +242,9 @@
       c.lineWidth = 1;
       for (i = k = 0, ref = this.w; 0 <= ref ? k < ref : k > ref; i = 0 <= ref ? ++k : --k) {
         c.moveTo(i * tileSize, 0);
-        c.lineTo(i * tileSize, globalParams.mapSize * tileSize);
+        c.lineTo(i * tileSize, mapParams.mapSize * tileSize);
         c.moveTo(0, i * tileSize);
-        c.lineTo(globalParams.mapSize * tileSize, i * tileSize);
+        c.lineTo(mapParams.mapSize * tileSize, i * tileSize);
       }
       c.stroke();
       return c.closePath();
@@ -254,7 +254,7 @@
       var col, i, j, k, key, l, len, len1, ref, ref1, ref2, results, row, tileSize, value;
       tileSize = TILE_SIZE();
       c.fillStyle = color.BACKGROUND;
-      c.fillRect(0, 0, globalParams.canvasSize, globalParams.canvasSize);
+      c.fillRect(0, 0, mapParams.canvasSize, mapParams.canvasSize);
       ref = this.tilemap;
       for (i = k = 0, len = ref.length; k < len; i = ++k) {
         row = ref[i];
@@ -266,13 +266,13 @@
               c.fillStyle = color.GROUND;
               break;
             case tile.DOOR:
-              c.fillStyle = globalParams.showDoors ? color.DOOR : color.GROUND;
+              c.fillStyle = mapParams.showDoors ? color.DOOR : color.GROUND;
               break;
             case tile.WALL:
-              c.fillStyle = globalParams.showWalls ? color.WALL : color.BACKGROUND;
+              c.fillStyle = mapParams.showWalls ? color.WALL : color.BACKGROUND;
               break;
             case tile.DEBUG:
-              c.fillStyle = globalParams.debugMode ? color.DEBUG : color.BACKGROUND;
+              c.fillStyle = mapParams.debugMode ? color.DEBUG : color.BACKGROUND;
               break;
             default:
               c.fillStyle = color.BACKGROUND;
@@ -280,10 +280,10 @@
           c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
         }
       }
-      if (globalParams.showGrid) {
+      if (mapParams.showGrid) {
         this.paintGrid(c);
       }
-      if (globalParams.debugMode) {
+      if (mapParams.debugMode) {
         ref2 = this.debug;
         results = [];
         for (key in ref2) {

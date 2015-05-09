@@ -154,9 +154,8 @@ split = (sector, horizontalDir = random.test(), steps = cfg.PARTITION_LEVEL) ->
     if sector.h/sector.w < 2 * cfg.RATIO_RESTR
       return split(sector, !horizontalDir, steps)
     # If stop splitting
-    else if (steps is 0) or
-    (sector.h < cfg.MAX_SECTOR_SIZE and random.test(cfg.BIG_ROOM_CHANCE)) or
-    (sector.h < 2*cfg.MIN_SECTOR_SIZE)
+    else if (steps is 0) or (sector.h < 2*cfg.MIN_SECTOR_SIZE) or
+        (sector.h < cfg.MAX_SECTOR_SIZE and random.test(cfg.BIG_ROOM_CHANCE))
       return [sector]
     # Finally split
     else
@@ -171,9 +170,8 @@ split = (sector, horizontalDir = random.test(), steps = cfg.PARTITION_LEVEL) ->
     if sector.w/sector.h < 2 * cfg.RATIO_RESTR
       return split(sector, !horizontalDir, steps)
     # If stop splitting
-    else if (steps is 0) or
-    (sector.w < cfg.MAX_SECTOR_SIZE and random.test(cfg.BIG_ROOM_CHANCE)) or
-    (sector.w < 2*cfg.MIN_SECTOR_SIZE)
+    else if (steps is 0) or (sector.w < 2*cfg.MIN_SECTOR_SIZE) or
+        (sector.w < cfg.MAX_SECTOR_SIZE and random.test(cfg.BIG_ROOM_CHANCE))
       return [sector]
     # Finally split
     else
