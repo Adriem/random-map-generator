@@ -54,7 +54,7 @@ class Tree
         @childs.push(new Tree(node).grow(splitFunction))
     @
 
-  paint: (c) ->
+  paint: (c, color = color.DEBUG) ->
     tileSize = TILE_SIZE()
     c.beginPath()
     c.strokeStyle = "#0f0"
@@ -80,10 +80,10 @@ generateMap = (size) ->
 
 spawnRoom = (sector) ->
   if sector.w < sector.h
-    w = utils.randomValue(cfg.MIN_ROOM_SIZE, sector.w - 2*cfg.MIN_SECTOR_REDUCTION)
+    w = random.value(cfg.MIN_ROOM_SIZE, sector.w - 2*cfg.MIN_SECTOR_REDUCTION)
     h = sector.h - (sector.w - w)
   else
-    h = utils.randomValue(cfg.MIN_ROOM_SIZE, sector.h - 2*cfg.MIN_SECTOR_REDUCTION)
+    h = random.value(cfg.MIN_ROOM_SIZE, sector.h - 2*cfg.MIN_SECTOR_REDUCTION)
     w = sector.w - (sector.h - h)
   x = sector.x + (sector.w - w) // 2
   y = sector.y - sector.x + x
@@ -95,7 +95,7 @@ generateRooms = (tree, tilemap) ->
   roomsToDelete = Math.round(leafs.length * cfg.ROOM_DELETING_RATIO)
   # Delete some rooms
   for x in [0...roomsToDelete]
-    index = utils.randomValue(leafs.length)
+    index = random.value(leafs.length)
     leafs[index].kill()
     leafs.splice(index, 1)
   # Generate rooms
@@ -142,12 +142,12 @@ generateDoors = (tilemap) ->
       # If must place room
       if (total[0] >= LOOKAHEAD or total[1] >= LOOKAHEAD or
           total[2] >= LOOKAHEAD or total[3] >= LOOKAHEAD) and
-          utils.randomTest(cfg.DOOR_CHANCE)
+          random.test(cfg.DOOR_CHANCE)
         tilemap[i][j] = tile.DOOR
         doors.push(new Point(j,i))
   doors
 
-split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL) ->
+split = (sector, horizontalDir = random.test(), steps = cfg.PARTITION_LEVEL) ->
   # Split horizontally
   if horizontalDir
     # If too narrow to split in this direction, try to split in another one
@@ -155,7 +155,7 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
       return split(sector, !horizontalDir, steps)
     # If stop splitting
     else if (steps is 0) or
-    (sector.h < cfg.MAX_SECTOR_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
+    (sector.h < cfg.MAX_SECTOR_SIZE and random.test(cfg.BIG_ROOM_CHANCE)) or
     (sector.h < 2*cfg.MIN_SECTOR_SIZE)
       return [sector]
     # Finally split
@@ -163,7 +163,7 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
       restriction = Math.max(cfg.MIN_SECTOR_SIZE,
         Math.ceil(sector.h * cfg.RATIO_RESTR))
       div1 = new Rect(sector.x, sector.y, sector.w,
-        utils.randomValue(restriction, sector.h - restriction))
+        random.value(restriction, sector.h - restriction))
       div2 = new Rect(sector.x, sector.y + div1.h, sector.w, sector.h - div1.h)
     # Split vertically
   else
@@ -172,7 +172,7 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
       return split(sector, !horizontalDir, steps)
     # If stop splitting
     else if (steps is 0) or
-    (sector.w < cfg.MAX_SECTOR_SIZE and utils.randomTest(cfg.BIG_ROOM_CHANCE)) or
+    (sector.w < cfg.MAX_SECTOR_SIZE and random.test(cfg.BIG_ROOM_CHANCE)) or
     (sector.w < 2*cfg.MIN_SECTOR_SIZE)
       return [sector]
     # Finally split
@@ -180,7 +180,7 @@ split = (sector, horizontalDir = utils.randomTest(), steps = cfg.PARTITION_LEVEL
       restriction = Math.max(cfg.MIN_SECTOR_SIZE,
         Math.ceil(sector.w * cfg.RATIO_RESTR))
       div1 = new Rect(sector.x, sector.y,
-        utils.randomValue(restriction, sector.w - restriction), sector.h)
+        random.value(restriction, sector.w - restriction), sector.h)
       div2 = new Rect(sector.x + div1.w, sector.y, sector.w - div1.w, sector.h)
   split(div1, !horizontalDir, steps-1).concat(split(div2, !horizontalDir, steps-1))
 

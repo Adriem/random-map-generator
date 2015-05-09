@@ -41,8 +41,8 @@
     DEBUG: -128
   };
 
-  this.utils = {
-    randomTest: function(val) {
+  this.random = {
+    test: function(val) {
       if (val == null) {
         val = 0.5;
       }
@@ -52,7 +52,7 @@
         return Math.random() * 100 < val;
       }
     },
-    randomValue: function(min, max) {
+    value: function(min, max) {
       if (max == null) {
         max = min;
         min = 0;

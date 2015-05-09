@@ -9,7 +9,7 @@
 @ALGORYTHM = "BSP"
 @DEBUG_MODE = false
 
-# TILE COLORS
+# COLORS
 @color =
   GRID: "#444"
   BACKGROUND: "#000"
@@ -26,11 +26,11 @@
   WALL: 2
   DEBUG: -128
 
-@utils =
-  randomTest: (val = 0.5) ->
+@random =
+  test: (val = 0.5) ->
     if val < 1 then Math.random() < val else Math.random() * 100 < val
 
-  randomValue: (min, max) ->
+  value: (min, max) ->
     unless max?
       max = min
       min = 0
