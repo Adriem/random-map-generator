@@ -2,27 +2,18 @@
 (function() {
   var hasProp = {}.hasOwnProperty;
 
-  this.MAP_SIZE = 50;
-
-  this.CANVAS_SIZE = 400;
+  this.globalParams = {
+    mapSize: 50,
+    canvasSize: 400,
+    showGrid: true,
+    showDoors: true,
+    showWalls: true,
+    debugMode: false
+  };
 
   this.TILE_SIZE = function() {
-    return CANVAS_SIZE / MAP_SIZE;
+    return globalParams.canvasSize / globalParams.mapSize;
   };
-
-  this.GRID_WIDTH = function() {
-    return CANVAS_SIZE / 1;
-  };
-
-  this.SHOW_GRID = true;
-
-  this.SHOW_WALLS = true;
-
-  this.SHOW_DOORS = true;
-
-  this.ALGORYTHM = "BSP";
-
-  this.DEBUG_MODE = false;
 
   this.color = {
     GRID: "#444",
@@ -117,7 +108,7 @@
       if (fillTile == null) {
         fillTile = tile.GROUND;
       }
-      return this.tilemap[point.y][point.x] = tile;
+      return this.tilemap[point.y][point.x] = fillTile;
     };
 
     TileMap.prototype.drawRect = function(rect, fillTile) {
@@ -251,9 +242,9 @@
       c.lineWidth = 1;
       for (i = k = 0, ref = this.w; 0 <= ref ? k < ref : k > ref; i = 0 <= ref ? ++k : --k) {
         c.moveTo(i * tileSize, 0);
-        c.lineTo(i * tileSize, MAP_SIZE * tileSize);
+        c.lineTo(i * tileSize, globalParams.mapSize * tileSize);
         c.moveTo(0, i * tileSize);
-        c.lineTo(MAP_SIZE * tileSize, i * tileSize);
+        c.lineTo(globalParams.mapSize * tileSize, i * tileSize);
       }
       c.stroke();
       return c.closePath();
@@ -263,7 +254,7 @@
       var col, i, j, k, key, l, len, len1, ref, ref1, ref2, results, row, tileSize, value;
       tileSize = TILE_SIZE();
       c.fillStyle = color.BACKGROUND;
-      c.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      c.fillRect(0, 0, globalParams.canvasSize, globalParams.canvasSize);
       ref = this.tilemap;
       for (i = k = 0, len = ref.length; k < len; i = ++k) {
         row = ref[i];
@@ -275,13 +266,13 @@
               c.fillStyle = color.GROUND;
               break;
             case tile.DOOR:
-              c.fillStyle = SHOW_DOORS ? color.DOOR : color.GROUND;
+              c.fillStyle = globalParams.showDoors ? color.DOOR : color.GROUND;
               break;
             case tile.WALL:
-              c.fillStyle = SHOW_WALLS ? color.WALL : color.BACKGROUND;
+              c.fillStyle = globalParams.showWalls ? color.WALL : color.BACKGROUND;
               break;
             case tile.DEBUG:
-              c.fillStyle = DEBUG_MODE ? color.DEBUG : color.BACKGROUND;
+              c.fillStyle = globalParams.debugMode ? color.DEBUG : color.BACKGROUND;
               break;
             default:
               c.fillStyle = color.BACKGROUND;
@@ -289,10 +280,10 @@
           c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize);
         }
       }
-      if (SHOW_GRID) {
+      if (globalParams.showGrid) {
         this.paintGrid(c);
       }
-      if (window.DEBUG_MODE) {
+      if (globalParams.debugMode) {
         ref2 = this.debug;
         results = [];
         for (key in ref2) {

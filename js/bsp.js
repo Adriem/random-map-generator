@@ -90,11 +90,8 @@
       return this;
     };
 
-    Tree.prototype.paint = function(c, color) {
+    Tree.prototype.paint = function(c) {
       var child, k, len, ref, results, tileSize;
-      if (color == null) {
-        color = color.DEBUG;
-      }
       tileSize = TILE_SIZE();
       c.beginPath();
       c.strokeStyle = "#0f0";

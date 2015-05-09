@@ -7,8 +7,8 @@
     c = $("#canvas")[0].getContext("2d");
     map = void 0;
     generateMap = function() {
-      window.CANVAS_SIZE = parseInt($("#canvas").attr("width"));
-      window.MAP_SIZE = parseInt($("#mapSize").val());
+      globalParams.canvasSize = parseInt($("#canvas").attr("width"));
+      globalParams.mapSize = parseInt($("#mapSize").val());
       switch ($("#algorythm").val()) {
         case "BSP":
           bsp.config.MIN_ROOM_SIZE = parseInt($("#roomMinSize").val());
@@ -21,34 +21,34 @@
            */
           bsp.config.ROOM_DELETING_RATIO = $("#deletingEnabled").prop("checked") ? parseFloat($("#deletingRatio").val()) : 0;
           bsp.config.DOOR_CHANCE = $("#doorsEnabled").prop("checked") ? parseInt($("#doorChance").val()) : 0;
-          map = bsp.generate(MAP_SIZE);
+          map = bsp.generate(globalParams.mapSize);
           return map.paint(c);
       }
     };
-    $("#mapSize").val(window.MAP_SIZE);
-    setupToggle("#showGrid", window.SHOW_GRID);
-    setupToggle("#showWalls", window.SHOW_WALLS);
-    setupToggle("#showDoors", window.SHOW_DOORS);
-    setupToggle("#showDebug", window.DEBUG_MODE);
+    $("#mapSize").val(globalParams.mapSize);
+    setupToggle("#showGrid", globalParams.showGrid);
+    setupToggle("#showWalls", globalParams.showWalls);
+    setupToggle("#showDoors", globalParams.showDoors);
+    setupToggle("#showDebug", globalParams.debugMode);
     $("#roomMinSize").val(bsp.config.MIN_ROOM_SIZE);
     $("#roomMaxSize").val(bsp.config.MAX_ROOM_SIZE);
     setupToggleable("#deletingEnabled", "#deletingRatio", bsp.config.ROOM_DELETING_RATIO);
     setupToggleable("#doorsEnabled", "#doorChance", bsp.config.DOOR_CHANCE);
     $("#generate").click(generateMap);
     $("#showGrid").change(function() {
-      window.SHOW_GRID = $("#showGrid").prop("checked");
+      globalParams.showGrid = $("#showGrid").prop("checked");
       return map.paint(c);
     });
     $("#showWalls").change(function() {
-      window.SHOW_WALLS = $("#showWalls").prop("checked");
+      globalParams.showWalls = $("#showWalls").prop("checked");
       return map.paint(c);
     });
     $("#showDoors").change(function() {
-      window.SHOW_DOORS = $("#showDoors").prop("checked");
+      globalParams.showDoors = $("#showDoors").prop("checked");
       return map.paint(c);
     });
     $("#showDebug").change(function() {
-      window.DEBUG_MODE = $("#showDebug").prop("checked");
+      globalParams.debugMode = $("#showDebug").prop("checked");
       return map.paint(c);
     });
     $('[data-togle="tooltip"]').tooltip();

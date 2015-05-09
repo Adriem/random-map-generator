@@ -3,8 +3,8 @@ $(document).ready ->
   c = $("#canvas")[0].getContext("2d")
   map = undefined
   generateMap = () ->
-    window.CANVAS_SIZE = parseInt($("#canvas").attr("width"))
-    window.MAP_SIZE = parseInt($("#mapSize").val())
+    globalParams.canvasSize = parseInt($("#canvas").attr("width"))
+    globalParams.mapSize = parseInt($("#mapSize").val())
     switch $("#algorythm").val()
       when "BSP"
         # ROOM MIN SIZE
@@ -24,15 +24,15 @@ $(document).ready ->
         bsp.config.DOOR_CHANCE = if $("#doorsEnabled").prop("checked")
           parseInt($("#doorChance").val())
         else 0
-        map = bsp.generate(MAP_SIZE)
+        map = bsp.generate(globalParams.mapSize)
         map.paint(c)
 
   # INPUT SETUPS
-  $("#mapSize").val(window.MAP_SIZE)
-  setupToggle("#showGrid", window.SHOW_GRID)
-  setupToggle("#showWalls", window.SHOW_WALLS)
-  setupToggle("#showDoors", window.SHOW_DOORS)
-  setupToggle("#showDebug", window.DEBUG_MODE)
+  $("#mapSize").val(globalParams.mapSize)
+  setupToggle("#showGrid", globalParams.showGrid)
+  setupToggle("#showWalls", globalParams.showWalls)
+  setupToggle("#showDoors", globalParams.showDoors)
+  setupToggle("#showDebug", globalParams.debugMode)
 
   # bsp specific
   $("#roomMinSize").val(bsp.config.MIN_ROOM_SIZE)
@@ -44,16 +44,16 @@ $(document).ready ->
   # Bind functions to buttons
   $("#generate").click(generateMap)
   $("#showGrid").change ->
-    window.SHOW_GRID = $("#showGrid").prop("checked")
+    globalParams.showGrid = $("#showGrid").prop("checked")
     map.paint(c)
   $("#showWalls").change ->
-    window.SHOW_WALLS = $("#showWalls").prop("checked")
+    globalParams.showWalls = $("#showWalls").prop("checked")
     map.paint(c)
   $("#showDoors").change ->
-    window.SHOW_DOORS = $("#showDoors").prop("checked")
+    globalParams.showDoors = $("#showDoors").prop("checked")
     map.paint(c)
   $("#showDebug").change ->
-    window.DEBUG_MODE = $("#showDebug").prop("checked")
+    globalParams.debugMode = $("#showDebug").prop("checked")
     map.paint(c)
   # Enable tooltips with bootstrap
   $('[data-togle="tooltip"]').tooltip()

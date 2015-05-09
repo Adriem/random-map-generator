@@ -54,7 +54,7 @@ class Tree
         @childs.push(new Tree(node).grow(splitFunction))
     @
 
-  paint: (c, color = color.DEBUG) ->
+  paint: (c) ->
     tileSize = TILE_SIZE()
     c.beginPath()
     c.strokeStyle = "#0f0"

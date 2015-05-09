@@ -1,13 +1,13 @@
-# DEFAULT PARAMS
-@MAP_SIZE = 50
-@CANVAS_SIZE = 400
-@TILE_SIZE = () -> CANVAS_SIZE / MAP_SIZE
-@GRID_WIDTH = () -> CANVAS_SIZE / 1
-@SHOW_GRID = true
-@SHOW_WALLS = true
-@SHOW_DOORS = true
-@ALGORYTHM = "BSP"
-@DEBUG_MODE = false
+# GLOBAL PARAMETERS
+@globalParams =
+  mapSize: 50
+  canvasSize: 400
+  showGrid: true
+  showDoors: true
+  showWalls: true
+  debugMode: false
+
+@TILE_SIZE = () -> globalParams.canvasSize / globalParams.mapSize
 
 # COLORS
 @color =
@@ -26,6 +26,7 @@
   WALL: 2
   DEBUG: -128
 
+# RANDOM UTILITIES
 @random =
   test: (val = 0.5) ->
     if val < 1 then Math.random() < val else Math.random() * 100 < val
@@ -36,6 +37,7 @@
       min = 0
     if min >= max then min else Math.floor(Math.random() * (max - min) + min)
 
+# CLASSES
 class @Point
   constructor: (@x, @y) ->
 
@@ -56,7 +58,7 @@ class @TileMap
         @tilemap[i][j] = tile.NULL
 
   drawPoint: (point, fillTile = tile.GROUND) ->
-    @tilemap[point.y][point.x] = tile
+    @tilemap[point.y][point.x] = fillTile
 
   drawRect: (rect, fillTile = tile.GROUND) ->
     for i in [rect.y...(rect.y + rect.h)]
@@ -135,28 +137,28 @@ class @TileMap
     c.lineWidth = 1
     for i in [0...@w]
       c.moveTo(i * tileSize, 0)
-      c.lineTo(i * tileSize, MAP_SIZE * tileSize)
+      c.lineTo(i * tileSize, globalParams.mapSize * tileSize)
       c.moveTo(0, i * tileSize)
-      c.lineTo(MAP_SIZE * tileSize, i * tileSize)
+      c.lineTo(globalParams.mapSize * tileSize, i * tileSize)
     c.stroke()
     c.closePath()
 
   paint: (c) ->
     tileSize = TILE_SIZE()
     c.fillStyle = color.BACKGROUND
-    c.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
+    c.fillRect(0, 0, globalParams.canvasSize, globalParams.canvasSize)
     for row, i in @tilemap
       for col, j in @tilemap[i]
         switch @tilemap[i][j]
           when tile.GROUND then c.fillStyle = color.GROUND
           when tile.DOOR
-            c.fillStyle = if SHOW_DOORS then color.DOOR else color.GROUND
+            c.fillStyle = if globalParams.showDoors then color.DOOR else color.GROUND
           when tile.WALL
-            c.fillStyle = if SHOW_WALLS then color.WALL else color.BACKGROUND
+            c.fillStyle = if globalParams.showWalls then color.WALL else color.BACKGROUND
           when tile.DEBUG
-            c.fillStyle = if DEBUG_MODE then color.DEBUG else color.BACKGROUND
+            c.fillStyle = if globalParams.debugMode then color.DEBUG else color.BACKGROUND
           else c.fillStyle = color.BACKGROUND
         c.fillRect(j * tileSize, i * tileSize, tileSize, tileSize)
 
-    @paintGrid(c) if SHOW_GRID
-    if window.DEBUG_MODE then value.paint(c) for own key, value of @debug
+    @paintGrid(c) if globalParams.showGrid
+    value.paint(c) for own key, value of @debug if globalParams.debugMode
