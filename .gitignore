@@ -1,6 +1,8 @@
 #Custom files
 examples
 test.html
+.idea
+random-map-generator.iml
 
 # Windows image file caches
 Thumbs.db
