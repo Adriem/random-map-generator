@@ -9,7 +9,7 @@ var gulp = require("gulp"),
     gutil = require("gulp-util"),
     inject = require("gulp-inject");
 
-/* TASKS */
+/* GULP TASKS */
 gulp.task("coffee", function(){
     gulp.src("src/coffee/*.coffee")
         .pipe(maps.init())
