@@ -7,8 +7,8 @@
       </sourceFilesUrls>
     </properties>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/js/controller.js" />
-      <root url="file://$PROJECT_DIR$/js/bsp.js" />
+      <root url="file://$PROJECT_DIR$/src/js/controller.js" />
+      <root url="file://$PROJECT_DIR$/src/js/bsp.js" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
