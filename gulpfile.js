@@ -1,4 +1,4 @@
-/* DEPENDENCIES */
+/* GULP DEPENDENCIES */
 var gulp = require("gulp"),
     coffee = require("gulp-coffee"),
     maps = require("gulp-sourcemaps"),
