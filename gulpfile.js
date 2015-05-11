@@ -36,6 +36,11 @@ gulp.task("css", function(){
         .pipe(gulp.dest("dist/css/"))
 });
 
+gulp.task("move-html", function(){
+    gulp.src("./src/*.html")
+        .pipe(gulp.dest("./dist"))
+})
+
 gulp.task("build-dev", ["coffee"], function(){
     var sources = gulp.src(['./src/js/*.js', './src/css/*.css'], {read: false});
     gulp.src("./src/*.html")
@@ -43,9 +48,9 @@ gulp.task("build-dev", ["coffee"], function(){
         .pipe(gulp.dest("./src"))
 });
 
-gulp.task("build-dist", ["css", "js"], function(){
+gulp.task("build-dist", ["css", "js", "move-html"], function(){
     var sources = gulp.src(['./dist/js/*.js', './dist/css/*.css'], {read: false});
-    gulp.src("./src/*.html")
+    gulp.src("./dist/*.html")
         .pipe(inject(sources, {relative: true}))
         .pipe(htmlmin({
             empty: false,
