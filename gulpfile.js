@@ -20,7 +20,7 @@ gulp.task("coffee", function(){
 
 gulp.task("js", ["coffee"], function(){
     gulp.src("src/js/*.js")
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(rename({
             extname: ".min.js"
         }))
