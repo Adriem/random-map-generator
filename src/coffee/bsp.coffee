@@ -33,9 +33,8 @@ class Tree
     retVal
 
   kill: ->
-    @node = undefined
     @childs = []
-    undefined # Avoiding wrong return
+    @node = undefined
 
   removeDeadLeafs: ->
     unless @isLeaf()
@@ -52,7 +51,7 @@ class Tree
     else if childNodes? and childNodes.length > 1
       for node in childNodes
         @childs.push(new Tree(node).grow(splitFunction))
-    @
+    return this
 
   paint: (c) ->
     tileSize = TILE_SIZE()
