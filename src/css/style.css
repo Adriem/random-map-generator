@@ -25,3 +25,10 @@
 .form-inline div, .form-inline label {
     padding:10px 10px 0;
 }
+
+#renderer-controls {
+    /* padding-bottom: 20px; */
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}

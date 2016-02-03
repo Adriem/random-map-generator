@@ -11,7 +11,7 @@ var gulp = require("gulp"),
 
 /* GULP TASKS */
 gulp.task("coffee", function(){
-    gulp.src("src/coffee/*.coffee")
+    gulp.src("src/coffee/**/*.coffee")
         .pipe(maps.init())
         .pipe(coffee({bare: true}).on('error', gutil.log))
         .pipe(maps.write())
@@ -42,7 +42,7 @@ gulp.task("move-html", function(){
 })
 
 gulp.task("build-dev", ["coffee"], function(){
-    var sources = gulp.src(['./src/js/*.js', './src/css/*.css'], {read: false});
+    var sources = gulp.src(['./src/js/**/*.js', './src/css/*.css'], {read: false});
     gulp.src("./src/*.html")
         .pipe(inject(sources, {relative: true}))
         .pipe(gulp.dest("./src"))

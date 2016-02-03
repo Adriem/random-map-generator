@@ -15,9 +15,16 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<!-- inject:js -->
-	<script src="js/bsp.js"></script>
-	<script src="js/common.js"></script>
-	<script src="js/controller.js"></script>
+	<script src="js/growing-graph.js"></script>
+	<script src="js/controller/canvas-controller.js"></script>
+	<script src="js/controller/form-controller.js"></script>
+	<script src="js/controller/main-controller.js"></script>
+	<script src="js/model/generator.js"></script>
+	<script src="js/model/map.js"></script>
+	<script src="js/model/tilemap.js"></script>
+	<script src="js/model/utils.js"></script>
+	<script src="js/obsolete/bsp.js"></script>
+	<script src="js/obsolete/common.js"></script>
 	<!-- endinject -->
 
 
@@ -62,132 +69,86 @@
 
 		<!-- TITLE -->
 		<div class="page-header text-center">
-			<h1 class="text-center">Adriem's map generator [v.BETA]</h1>
+			<h1 class="text-center">Adriem's map generator</h1>
 		</div>
 
 		<!-- CONTROLS -->
 		<div id="controls" class="form-horizontal col-lg-4 col-lg-offset-1 col-sm-6 col-xs-12" style="padding:15px">
 
-			<!-- COMMON FIELDS -->
-			<div class="form-group">
-				<label for="algorythm" class="control-label col-sm-6 col-xs-5">Algorythm:</label>
-				<div class="col-sm-4 col-xs-7">
-					<select class="form-control input-sm" id="algorythm" disabled>
-						<option>BSP</option>
-						<!--<option>Cellular automata</option>-->
-						<!--<option>Random placing rooms</option>-->
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="mapSize" class="control-label col-sm-6 col-xs-5">Map Size:</label>
-				<div class="col-sm-4 col-xs-7">
-					<input type="number" class="form-control input-sm" min="0" step="5" id="mapSize">
-				</div>
-			</div>
+			<!-- FORM FIELDS -->
+            <div id="renderer-controls"></div>
+            <div id="generator-controls"></div>
 
-			<!-- BSP FIELDS -->
-			<div id="bspFields">
-				<div class="form-group">
-					<label class="control-label col-sm-6 col-xs-5">Partition Mode:</label>
-					<label class="radio-inline">
-					  <input type="radio" name="bspPartitionMode" value="1" disabled> Simple
-					</label>
-					<label class="radio-inline">
-					  <input type="radio" name="bspPartitionMode" value="2" checked="on"disabled> Double
-					</label>
-				</div>
-				<div class="form-group">
-					<label for="roomMinSize" class="control-label col-sm-6 col-xs-5">Room min. size:</label>
-					<div class="col-sm-4 col-xs-7">
-						<input type="number" class="form-control input-sm" min="1" id="roomMinSize">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="roomMaxSize" class="control-label col-sm-6 col-xs-5">Room max. size:</label>
-					<div class="col-sm-4 col-xs-7">
-						<input type="number" class="form-control input-sm" min="1" id="roomMaxSize">
-					</div>
-				</div>
-				<!--<div class="form-group">
-					<label class="control-label col-sm-6 col-xs-5">Aspect ratio restr.:</label>
-					<div class="col-sm-3 col-xs-6">
-						<input type="number" class="form-control input-sm" id="aspectRatio" min="0" step="0.05" max="1">
-					</div>
-					<div class="col-xs-1 col-sm-1 input-sm">
-						<input type="checkbox" id="aspectRatioEnabled" checked="on">
-					</div>
-				</div>-->
-				<div class="form-group">
-					<label class="control-label col-sm-6 col-xs-5">Room deleting ratio:</label>
-					<div class="col-sm-3 col-xs-6">
-						<input type="number" class="form-control input-sm" id="deletingRatio" min="0" step="0.05" max="1">
-					</div>
-					<div class="col-xs-1 col-sm-1 input-sm">
-						<input type="checkbox" id="deletingEnabled" checked="on">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-sm-6 col-xs-5">Door spawn chance:</label>
-					<div class="col-sm-3 col-xs-6">
-						<input type="number" class="form-control input-sm" id="doorChance" min="0" step="5" max="100">
-					</div>
-					<div class="col-xs-1 col-sm-1 input-sm">
-						<input type="checkbox" id="doorsEnabled" checked="on">
-					</div>
-				</div>
-				<!--<div class="form-group">
-					<label class="control-label col-sm-6 col-xs-5">Generate walls:</label>
-					<div class="checkbox col-sm-offset-3 col-xs-offset-6 col-xs-1 input-sm">
-						<label>
-							<input type="checkbox" id="drawWalls">
-						</label>
-					</div>
-				</div>-->
-			</div>
+            <!-- SELECT EXAMPLE -->
+			<!-- <div class="form-group"> -->
+				<!-- <label for="algorythm" class="control-label col-sm-6 col-xs-5">Algorythm:</label> -->
+				<!-- <div class="col-sm-4 col-xs-7"> -->
+					<!-- <select class="form-control input-sm" id="algorythm" disabled> -->
+						<!-- [> <option>BSP</option> <] -->
+						<!-- <option>Custom</option> -->
+						<!-- [><option>Cellular automata</option><] -->
+						<!-- [><option>Random placing rooms</option><] -->
+					<!-- </select> -->
+				<!-- </div> -->
+			<!-- </div> -->
 
-			<!--COMMON FIELDS AGAIN -->
-			<!--<div class="form-group"><div class="col-sm-12">
-				<div class="checkbox text-center input-sm">
-					<label><input type="checkbox" name="newSeed">Generate new seed</label>
-				</div>
-			</div></div>-->
+            <!-- TOGGLE EXAMPLE -->
+            <!-- <div class="form-group"> -->
+                <!-- <label class="control-label col-sm-6 col-xs-5">Generate walls:</label> -->
+                <!-- <div class="checkbox col-sm-offset-3 col-xs-offset-6 col-xs-1 input-sm"> -->
+                    <!-- <label> -->
+                        <!-- <input type="checkbox" id="drawWalls"> -->
+                    <!-- </label> -->
+                <!-- </div> -->
+            <!-- </div> -->
+
+            <!-- TOGGLEABLE EXAMPLE -->
+			<!-- <div class="form-group"> -->
+				<!-- <label for="mapSize" class="control-label col-sm-6 col-xs-5">Map Size:</label> -->
+				<!-- <div class="col-sm-4 col-xs-7"> -->
+					<!-- <input type="number" class="form-control input-sm" min="0" step="5" id="mapSize"> -->
+				<!-- </div> -->
+			<!-- </div> -->
+
+            <!-- <p style="font-size: 9pt; pading: 20px 40px"> -->
+                <!-- * All the parameters of the generator are measured in units, -->
+                <!-- being a unit the size required to add a door on a room (a room -->
+                <!-- of 2x1 can have up to 2 doors on top and bottom, and up to 1 -->
+                <!-- door on each side).  Doors are always 1 tile sized -->
+            <!-- </p> -->
+			<!-- FORM BUTTONS AGAIN -->
 			<div class="form-group"><div class="col-sm-12">
 				<div class="text-center">
 					<button id="generate" class="btn btn-danger">Generate!</button>
 				</div></div>
 			</div>
-
 		</div>
+
 		<!-- CANVAS -->
-		<div class="canvas_wrapper col-lg-4 col-md-5 col-sm-6 col-xs-12">
+		<div class="canvas_wrapper col-lg-5 col-md-5 col-sm-6 col-xs-12">
 			<canvas width="750" height="750" id="canvas"></canvas>
 
-			<form class="form-inline text-center">
-			<!--<form class="nav nav-pills nav-justified">-->
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" id="showGrid"> Show grid
-					</label>
-				</div>
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" id="showWalls"> Show walls
-					</label>
-				</div>
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" id="showDoors"> Show doors
-					</label>
-				</div>
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" id="showDebug"> Show debug info
-					</label>
-				</div>
-			</form>
+			<!-- <form class="form-inline text-center"> -->
+			<!-- [><form class="nav nav-pills nav-justified"><] -->
+				<!-- <div class="checkbox"> -->
+					<!-- <label> -->
+						<!-- <input type="checkbox" id="showGrid"> Show grid -->
+					<!-- </label> -->
+				<!-- </div> -->
+				<!-- <div class="checkbox"> -->
+					<!-- <label> -->
+						<!-- <input type="checkbox" id="showWalls"> Show walls -->
+					<!-- </label> -->
+				<!-- </div> -->
+				<!-- <div class="checkbox"> -->
+					<!-- <label> -->
+						<!-- <input type="checkbox" id="showDebug"> Show debug info -->
+					<!-- </label> -->
+				<!-- </div> -->
+			<!-- </form> -->
 		</div>
 	</div>
+    <!-- DESKTOP FOOTER -->
 	<div class="container page-footer hidden-xs">
 		<div class="pull-left">
 			<a href="#" data-toggle="modal" data-target="#aboutModal">About this generator...</a>
@@ -197,6 +158,7 @@
 			<a href="http://www.github.com/adriem/random-map-generator"><span class="fa fa-github fa-lg"></span> View on GitHub! </a>
 		</div>
 	</div>
+    <!-- MOBILE FOOTER -->
 	<div class="container page-footer visible-xs text-center">
 		<ul class="nav nav-pills nav-stacked">
 			<li><a href="#" data-toggle="modal" data-target="#aboutModal">About this generator...</a></li>
