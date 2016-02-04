@@ -21,6 +21,7 @@ Color =
 
 wall = ['NONE', 'TILE', 'COMPOSED']
 
+
 class CanvasController
 
   constructor: (@id) -> @canvas = $('#' + @id)[0].getContext("2d")

@@ -48,11 +48,10 @@ generateInitialState = (width, height, firstRoomWidth=1, firstRoomHeight=1) ->
 expandRoomFromFrontier = (state, properties, onStepCallback, onRoomExpandedCallback) ->
   _state = cloneState(state)  # Deep copy of _sate for the sake of inmutability
   room = _state.frontier.shift()
-  console.log room is state.frontier[0], room, state.frontier[0]
   for door, i in random.shuffle(room.getAvailableExits()) when _state.remainingRooms > 0
     _state = cloneState(_state) if i > 0  # Generate new state for each new step
     _room = _state.roomList[room.id]  # Get the reference to room from cloned state
-    candidates = getPossibleNeighbours(door, room, _state.tilemap,
+    candidates = getPossibleNeighbours(door, _room, _state.tilemap,
                                        properties.minRoomSize,
                                        properties.maxRoomSize)
     if candidates.length > 0
@@ -81,6 +80,8 @@ this.generate = generateMap
 obtainMap = (state) ->
   new Map(state.tilemap.width, state.tilemap.height, state.roomList)
 
+getOppositeDirection = (door) -> ((door % 4) + 2) % 4
+
 # Deep copy of state
 cloneState = (state) ->
   roomList: (room.clone() for room in state.roomList)
@@ -89,7 +90,53 @@ cloneState = (state) ->
   steps: state.steps
   remainingRooms: state.remainingRooms
 
-getPossibleNeighbours = (door, room, tilemap, minSize, maxSize) ->
+getPossibleNeighbours = (door, room, tilemap, minSize = 1, maxSize = 2) ->
+  doorDirection = door % 4
+  ref = switch doorDirection
+    when Direction.NORTH
+      new Point(room.origin[0] + door // 4, room.origin[1])
+    when Direction.SOUTH
+      new Point(room.origin[0] + door // 4, room.origin[1] + room.height - 1)
+    when Direction.EAST
+      new Point(room.origin[0] + room.width - 1, room.origin[1] + door // 4)
+    when Direction.WEST
+      new Point(room.origin[0], room.origin[1] + door // 4)
+  candidates = []
+  # Generate rooms for all the possible sizes
+  for height in [minSize..maxSize] then for width in [minSize..maxSize]
+    # Iterate all over the possible positions the room could be
+    offsetMax = if doorDirection is Direction.NORTH or doorDirection is Direction.SOUTH then width else height
+    for offset in [1 - offsetMax..0]
+      console.log door
+      # Calculate the door where the room will be linked on the candidate
+      doorOnNeighbour = 4 * offset * (-1) + getOppositeDirection(door)
+      # Generate the neighbour array for the candidate
+      numberOfDoors = Math.max(width, height) * 4
+      neighbours = for doorIndex in [0...numberOfDoors]
+        if doorIndex is doorOnNeighbour then room.id else null
+      # Calculate the origin of the room
+      xOrigin = switch doorDirection
+        when Direction.EAST then ref[0] + 1
+        when Direction.WEST then ref[0] - width
+        else ref[0] + offset
+      yOrigin = switch doorDirection
+        when Direction.NORTH then ref[1] - height
+        when Direction.SOUTH then ref[1] + 1
+        else ref[1] + offset
+      candidate = new Room(xOrigin, yOrigin, width, height, neighbours)
+      # Add the door to the candidates if it doesn't collide with anything
+      candidates.push(candidate) if tilemap.is(
+        candidate.origin[0], candidate.origin[1], width, height, Tile.EMPTY)
+  return candidates
+
+
+
+
+
+# LEGACY
+# ------------------------------------------------------------------------------
+
+getPossibleNeighboursx = (door, room, tilemap, minSize, maxSize) ->
   # Calculate reference point and get candidatos from that position
   switch door % 4
     when Direction.NORTH
