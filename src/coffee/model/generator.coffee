@@ -30,6 +30,12 @@ Defaults =
 
 # ------------------------------------------------------------------------------
 
+###
+  This class represents a room that will be part of the map. It is defined by
+  two coordinates in the space, a width and a height. It can also have some
+  attributes and some references to its neighbours.
+###
+
 class Room
   constructor: (@x, @y, @width, @height, @id, @attrs = {}, @neighbours = []) ->
 
@@ -44,12 +50,20 @@ class Room
   # Return an array with the indexes of unused exits of the room
   getAvailableExits: () -> door for door in @getExits() when not @neighbours[door]?
 
+  # Returns the area of the room
+  getArea: -> @width * @height
+
+  # Return true if given room collides with this room
+  collidesWith: (room) ->
+    not (@x > room.x + room.width or room.x > @x + @width) and
+    not (@y > room.y + room.height or room.y > @y + @height)
+
   # Generate a deep copy of this room
   clone: ->
-    attrClone = {}
-    attrClone[key] = value for key, value of @attrs
+    attrsClone = {}
+    attrsClone[key] = value for key, value of @attrs
     neighboursClone = (neighbour for neighbour in @neighbours)
-    new Room(@x, @y, @width, @height, @id, attrClone, neighboursClone)
+    new Room(@x, @y, @width, @height, @id, attrsClone, neighboursClone)
 
 # ------------------------------------------------------------------------------
 
@@ -62,8 +76,8 @@ class Room
 
 class State
 
-  constructor: (@rooms = [], @frontier = [],
-                @collisionMap = new Tilemap(100, 100, false)) ->
+  constructor: (@rooms = [], @frontier = [], width, height) ->
+    if width? and height? then @collisionMap = new Tilemap(width, height, false)
 
   # Return the number of steps given until this state
   getSteps: -> @rooms.length - 1
@@ -72,18 +86,24 @@ class State
   addRoom: (room) ->
     @rooms.push(room)
     @frontier.push(room)
-    @collisionMap.set(room.x, room.y, room.width, room.height, true)
+    @collisionMap.set(room.x, room.y, room.width, room.height, true) if @collisionMap?
 
   # Checks if a room can be added without colliding with existing rooms
   hasRoomFor: (room) ->
-    @collisionMap.is(room.x, room.y, room.width, room.height, false)
+    if @collisionMap?
+      return @collisionMap.is(room.x, room.y, room.width, room.height, false)
+    else
+      return false for otherRoom in @rooms when otherRoom.collidesWith(room)
+      return true
 
   # Generate a deep clone of this state
-  clone: -> new State(
-    room.clone() for room in @rooms,
-    room.clone() for room in @frontier,
-    @collisionMap.clone()
-  )
+  clone: ->
+    newInstance = new State(
+      room.clone() for room in @rooms,
+      room.clone() for room in @frontier
+    )
+    newInstance.collisionMap = @collisionMap.clone() if @collisionMap?
+    return newInstance
 
 # ------------------------------------------------------------------------------
 
@@ -112,11 +132,22 @@ class Generator
     new Room(x, y, @initialRoomWidth, @initialRoomHeight, 0)
 
   generateInitialState: ->
-    new State([], [], new Tilemap(@mapWidth, @mapHeight, false))
+    new State([], [], @mapWidth, @mapHeight)
 
   generateNeighbour: (room, door, state) ->
     candidates = @generatePossibleNeighbours(room, door, state)
-    candidates[random.value(0, candidates.length)] if candidates.length > 0
+    if candidates.length > 0
+      # Group candidates by area
+      availableAreas = []
+      candidatesGrouped = []
+      for room in candidates
+        unless room.getArea() in availableAreas
+          availableAreas.push(room.getArea())
+          candidatesGrouped[availableAreas.indexOf(room.getArea())] = []
+        candidatesGrouped[availableAreas.indexOf(room.getArea())].push(room)
+      # Randomly select candidate
+      selectedGroup = candidatesGrouped[random.value(0, candidatesGrouped.length)]
+      selectedGroup[random.value(0, selectedGroup.length)]
 
   generatePossibleNeighbours: (room, door, state) ->
     candidates = []
@@ -165,10 +196,10 @@ generate = (numberOfRooms, properties, onStepCallback) ->
 
   # Initialize generator
   generator = new Generator(numberOfRooms, properties)
-  state = generator.generateInitialState()
 
   # Generate initial state
   initialRoom = generator.generateInitialRoom()
+  state = generator.generateInitialState()
   state.addRoom(initialRoom)
   remainingRooms = numberOfRooms - 1  # Take initial room
   onStepCallback(obtainMap(state.clone()), state.getSteps()) if onStepCallback?

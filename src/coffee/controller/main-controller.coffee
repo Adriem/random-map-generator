@@ -31,6 +31,7 @@ $(document).ready () ->
         initialRoomHeight: controls.initialRoomH.get()
         minRoomSize: controls.minRoomSize.get()
         maxRoomSize: controls.maxRoomSize.get()
+        ratioRestriction: 0.5
       },
       (map, step) ->
         console.log("Step ##{step}: ", map.roomList)

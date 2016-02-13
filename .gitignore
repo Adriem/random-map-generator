@@ -4,6 +4,7 @@ test.html
 .idea
 random-map-generator.iml
 node_modules
+*.swp
 
 # Windows image file caches
 Thumbs.db

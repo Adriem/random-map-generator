@@ -24,18 +24,6 @@ random =
 # Return the exact copy of the item
 clone = (original) -> original
 
-# Property definition with set & get for coffeescript as seen in
-# https://github.com/jashkenas/coffeescript/issues/451#issuecomment-2404226
-# Since any function called within a class definition body will have the class
-# itself as 'this' (or '@'), this can be called like this:
-# class FooBar
-#   constructor: (@param1, @param2, @moreParams) ->
-#   @define 'prop1',
-#     get: -> @param1.doSomething()
-#     set: (someVal) -> @param1 = someVal
-Function::define = (property, description, object = this) ->
-  Object.defineProperty object.prototype, property, description
-
 # Make elemets available to all the window
 this.random = random
 this.clone  = clone
