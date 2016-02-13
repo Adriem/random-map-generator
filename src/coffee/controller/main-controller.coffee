@@ -23,10 +23,10 @@ $(document).ready () ->
   generateMap = () ->
     steps = []
     map = generate(
-      controls.mapSize.get(),
-      controls.mapSize.get(),
       controls.numberOfRooms.get(),
       {
+        width: controls.mapSize.get()
+        height: controls.mapSize.get()
         initialRoomWidth: controls.initialRoomW.get()
         initialRoomHeight: controls.initialRoomH.get()
         minRoomSize: controls.minRoomSize.get()
@@ -58,12 +58,12 @@ $(document).ready () ->
   $('[data-togle="tooltip"]').tooltip()
 
   # Set default values to the inputs
-  controls.mapSize.set(Defaults.MAP_WIDTH)
+  controls.mapSize.set(Defaults.MAP_SIZE)
   controls.numberOfRooms.set(Defaults.NUMBER_OF_ROOMS)
   controls.initialRoomW.set(Defaults.INITIAL_ROOM_WIDTH)
   controls.initialRoomH.set(Defaults.INITIAL_ROOM_HEIGHT)
-  controls.minRoomSize.set(Defaults.MIN_ROOM_WIDTH)
-  controls.maxRoomSize.set(Defaults.MAX_ROOM_WIDTH)
+  controls.minRoomSize.set(Defaults.MIN_ROOM_SIZE)
+  controls.maxRoomSize.set(Defaults.MAX_ROOM_SIZE)
 
   properties.tilesPerUnit.set(Defaults.TILES_PER_UNIT)
   properties.wallStyle.set(2)

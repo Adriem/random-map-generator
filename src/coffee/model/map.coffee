@@ -27,11 +27,13 @@ Direction =
   is also linked to its neighbours, so it can be treated as a node in a graph.
 ###
 
-class Room
+class RoomX
 
   constructor: (x, y, width, height, neighbours, id, special, state = 'open') ->
     this.origin = new Point(x, y)
     this.p2 = new Point(x + width - 1, y + height - 1)
+    this.x = origin.x
+    this.y = origin.y
     this.state = 'open'
     this.special = special
     this.width = width
@@ -94,7 +96,7 @@ class Map
   # Private helper
   paintRoom = (room, tilemap, tilesPerUnit) ->
     # Convert dimensions and coordinates
-    origin = new Point(room.origin[0]*tilesPerUnit, room.origin[1]*tilesPerUnit)
+    origin = new Point(room.x*tilesPerUnit, room.y*tilesPerUnit)
     width = room.width * tilesPerUnit
     height = room.height * tilesPerUnit
     # Paint floor
@@ -127,5 +129,5 @@ class Map
 # Make elements available globally
 this.Direction = Direction
 this.Tile = Tile
-this.Room = Room
+this.RoomX = Room
 this.Map  = Map
