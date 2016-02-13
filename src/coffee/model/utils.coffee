@@ -1,5 +1,6 @@
 # ==============================================================================
 #  This file contains some utilities for general use
+# ------------------------------------------------------------------------------
 #  Author: Adrian Moreno
 # ==============================================================================
 
@@ -16,14 +17,16 @@ random =
       min = 0
     if min >= max then min else Math.floor(Math.random() * (max - min) + min)
 
-  # TODO
   # Return a random arrangement from an array
-  shuffle: (array) -> array
-
-# TODO
-# Return the exact copy of the item
-clone = (original) -> original
+  shuffle: (array) ->
+    arrayClone = (item for item in array)
+    newArray = []
+    while arrayClone.length > 0
+      randomIndex = this.value(0, arrayClone.length)
+      randomItem = arrayClone.splice(randomIndex, 1)
+      newArray.push(randomItem...)
+    console.log "Shuffled", array, newArray
+    return newArray
 
 # Make elemets available to all the window
-this.random = random
-this.clone  = clone
+window.random = random
