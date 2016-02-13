@@ -136,7 +136,7 @@ class Generator
 
   generateNeighbour: (room, door, state) ->
     candidates = @generatePossibleNeighbours(room, door, state)
-    if candidates.length > 0
+    if candidates.length > 0 and random.test(getSpawnChance(state))
       # Group candidates by area
       availableAreas = []
       candidatesGrouped = []
@@ -183,6 +183,8 @@ class Generator
 
   # PRIVATE HELPERS
   getOppositeDirection = (door) -> ((door % 4) + 2) % 4
+  getSpawnChance = (state) ->
+    if state.frontier.length is 0 then 100 else 75
 
 # ------------------------------------------------------------------------------
 
