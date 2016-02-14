@@ -25,7 +25,6 @@ random =
       randomIndex = this.value(0, arrayClone.length)
       randomItem = arrayClone.splice(randomIndex, 1)
       newArray.push(randomItem...)
-    console.log "Shuffled", array, newArray
     return newArray
 
 # Make elemets available to all the window

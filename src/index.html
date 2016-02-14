@@ -9,23 +9,11 @@
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<!-- inject:css -->
-	<link rel="stylesheet" href="css/style.css">
 	<!-- endinject -->
 	<!-- SCRIPTS -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<!-- inject:js -->
-	<script src="js/growing-graph.js"></script>
-	<script src="js/controller/canvas-controller.js"></script>
-	<script src="js/controller/form-controller.js"></script>
-	<script src="js/controller/main-controller.js"></script>
-	<script src="js/model/generator-new.js"></script>
-	<script src="js/model/generator.js"></script>
-	<script src="js/model/map.js"></script>
-	<script src="js/model/tilemap.js"></script>
-	<script src="js/model/utils.js"></script>
-	<script src="js/obsolete/bsp.js"></script>
-	<script src="js/obsolete/common.js"></script>
 	<!-- endinject -->
 
 
@@ -80,44 +68,6 @@
             <div id="renderer-controls"></div>
             <div id="generator-controls"></div>
 
-            <!-- SELECT EXAMPLE -->
-			<!-- <div class="form-group"> -->
-				<!-- <label for="algorythm" class="control-label col-sm-6 col-xs-5">Algorythm:</label> -->
-				<!-- <div class="col-sm-4 col-xs-7"> -->
-					<!-- <select class="form-control input-sm" id="algorythm" disabled> -->
-						<!-- [> <option>BSP</option> <] -->
-						<!-- <option>Custom</option> -->
-						<!-- [><option>Cellular automata</option><] -->
-						<!-- [><option>Random placing rooms</option><] -->
-					<!-- </select> -->
-				<!-- </div> -->
-			<!-- </div> -->
-
-            <!-- TOGGLE EXAMPLE -->
-            <!-- <div class="form-group"> -->
-                <!-- <label class="control-label col-sm-6 col-xs-5">Generate walls:</label> -->
-                <!-- <div class="checkbox col-sm-offset-3 col-xs-offset-6 col-xs-1 input-sm"> -->
-                    <!-- <label> -->
-                        <!-- <input type="checkbox" id="drawWalls"> -->
-                    <!-- </label> -->
-                <!-- </div> -->
-            <!-- </div> -->
-
-            <!-- TOGGLEABLE EXAMPLE -->
-			<!-- <div class="form-group"> -->
-				<!-- <label for="mapSize" class="control-label col-sm-6 col-xs-5">Map Size:</label> -->
-				<!-- <div class="col-sm-4 col-xs-7"> -->
-					<!-- <input type="number" class="form-control input-sm" min="0" step="5" id="mapSize"> -->
-				<!-- </div> -->
-			<!-- </div> -->
-
-            <!-- <p style="font-size: 9pt; pading: 20px 40px"> -->
-                <!-- * All the parameters of the generator are measured in units, -->
-                <!-- being a unit the size required to add a door on a room (a room -->
-                <!-- of 2x1 can have up to 2 doors on top and bottom, and up to 1 -->
-                <!-- door on each side).  Doors are always 1 tile sized -->
-            <!-- </p> -->
-			<!-- FORM BUTTONS AGAIN -->
 			<div class="form-group"><div class="col-sm-12">
 				<div class="text-center">
 					<button id="generate" class="btn btn-danger">Generate!</button>
@@ -129,24 +79,7 @@
 		<div class="canvas_wrapper col-lg-5 col-md-5 col-sm-6 col-xs-12">
 			<canvas width="750" height="750" id="canvas"></canvas>
 
-			<!-- <form class="form-inline text-center"> -->
-			<!-- [><form class="nav nav-pills nav-justified"><] -->
-				<!-- <div class="checkbox"> -->
-					<!-- <label> -->
-						<!-- <input type="checkbox" id="showGrid"> Show grid -->
-					<!-- </label> -->
-				<!-- </div> -->
-				<!-- <div class="checkbox"> -->
-					<!-- <label> -->
-						<!-- <input type="checkbox" id="showWalls"> Show walls -->
-					<!-- </label> -->
-				<!-- </div> -->
-				<!-- <div class="checkbox"> -->
-					<!-- <label> -->
-						<!-- <input type="checkbox" id="showDebug"> Show debug info -->
-					<!-- </label> -->
-				<!-- </div> -->
-			<!-- </form> -->
+            <div id="room-list" class="text-center"></div>
 		</div>
 	</div>
     <!-- DESKTOP FOOTER -->
@@ -167,6 +100,9 @@
 			<li><a href="http://www.github.com/adriem/random-map-generator"><span class="fa fa-github fa-lg"></span> View on GitHub! </a></li>
 		</ul>
 	</div>
+
+
+
 </body>
 </html>
 

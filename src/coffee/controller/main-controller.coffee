@@ -1,5 +1,6 @@
 $(document).ready () ->
 
+  drawing = false
   canvas = new CanvasController 'canvas'
   map = null
 
@@ -8,7 +9,7 @@ $(document).ready () ->
     tilesPerUnit : new NumericInput('tilesPerUnit', 'Tiles per unit', 1)
     wallStyle    : new SelectInput('wallStyle', "Wall style", wallStyle)
     drawGrid     : new ToggleInput('drawGrid', "Draw grid")
-    debugMode    : new ToggleInput('debugMode', "Show debug info", true)
+    # debugMode    : new ToggleInput('debugMode', "Show debug info", true)
 
   # GENERATOR CONTROLS
   controls =
@@ -18,6 +19,9 @@ $(document).ready () ->
     initialRoomH  : new NumericInput('initialRoomH', 'Initial room height', 1)
     minRoomSize   : new NumericInput('minRoomSize', 'Min. room size', 1)
     maxRoomSize   : new NumericInput('maxRoomSize', 'Max. room size', 1)
+    minArea: new ToggleableNumericInput('minArea', 'Min. room area', 1)
+    maxArea: new ToggleableNumericInput('maxArea', 'Max. room area', 1)
+    ratioRestr: new ToggleableNumericInput('ratioRestr', 'Ratio restr.', 0.5, 1, 0.1)
 
   # FUNCTION DEFINITION
   generateMap = () ->
@@ -31,22 +35,45 @@ $(document).ready () ->
         initialRoomHeight: controls.initialRoomH.get()
         minRoomSize: controls.minRoomSize.get()
         maxRoomSize: controls.maxRoomSize.get()
-        ratioRestriction: 0.5
+        ratioRestriction:
+          if controls.ratioRestr.getToggleState()
+            controls.ratioRestr.getValue()
+          else undefined
+        maxRoomArea:
+          if controls.maxArea.getToggleState()
+            controls.maxArea.getValue()
+          else undefined
+        minRoomArea:
+          if controls.minArea.getToggleState()
+            controls.minArea.getValue()
+          else undefined
       },
       (map, step) ->
         console.log("Step ##{step}: ", map.roomList)
         steps.push map
     )
     drawStepByStep canvas, steps
-    # drawMap canvas, map
 
   drawMap = (canvas, map) ->
+    $('#room-list').empty()
+    for room in map.roomList
+      $('#room-list').append """
+        <div><strong>Room ##{room.id}: </strong> {
+          x: #{room.x}, y: #{room.y}, width: #{room.width}, height: #{room.height}
+        }</div>
+      """
     tilemap = map.getTilemap(properties.tilesPerUnit.get())
     canvas.drawMap(tilemap, properties.drawGrid.get(), properties.wallStyle.get())
 
   drawStepByStep = (canvas, steps, i = 0) ->
+    $('#generate').attr('disabled', '')
+    drawing = true
     drawMap canvas, steps.shift()
-    setTimeout((() -> drawStepByStep(canvas, steps)), 250) if steps.length > 0
+    if steps.length > 0
+      setTimeout((() -> drawStepByStep(canvas, steps)), 250)
+    else
+      $('#generate').removeAttr('disabled', '')
+      drawing = false
 
   # Add controls to the page
   $('#renderer-controls').append(value.html) for own key, value of properties
@@ -65,37 +92,29 @@ $(document).ready () ->
   controls.initialRoomH.set(Defaults.INITIAL_ROOM_HEIGHT)
   controls.minRoomSize.set(Defaults.MIN_ROOM_SIZE)
   controls.maxRoomSize.set(Defaults.MAX_ROOM_SIZE)
+  controls.minArea.set(Defaults.MIN_ROOM_AREA)
+  controls.minArea.toggle(true)
+  controls.maxArea.set(Defaults.MAX_ROOM_AREA)
+  controls.maxArea.toggle(false)
+  controls.ratioRestr.set(Defaults.RATIO_RESTRICTION)
+  controls.ratioRestr.toggle(false)
 
   properties.tilesPerUnit.set(Defaults.TILES_PER_UNIT)
   properties.wallStyle.set(2)
   properties.drawGrid.set(true)
-  properties.debugMode.set(false)
 
   # Set listener to auto-updated inputs
-  properties.tilesPerUnit.setListener(() -> drawMap(canvas, map))
-  properties.wallStyle.setListener(() -> drawMap(canvas, map))
-  properties.drawGrid.setListener(() -> drawMap(canvas, map))
-  properties.drawGrid.setListener(() -> drawMap(canvas, map))
+  properties.tilesPerUnit.setListener(() -> drawMap(canvas, map) unless drawing)
+  properties.wallStyle.setListener(() -> drawMap(canvas, map) unless drawing)
+  properties.drawGrid.setListener(() -> drawMap(canvas, map) unless drawing)
+
+  # Set listener to toggleable inputs
+  controls.maxArea.setToggleListener () ->
+    controls.maxArea.toggle(controls.maxArea.getToggleState())
+  controls.minArea.setToggleListener () ->
+    controls.minArea.toggle(controls.minArea.getToggleState())
+  controls.ratioRestr.setToggleListener () ->
+    controls.ratioRestr.toggle(controls.ratioRestr.getToggleState())
 
   # Generate map on page load
   generateMap()
-
-
-
-
-# ------------------------------------------------------------------------------
-# LEGACY :\
-# ------------------------------------------------------------------------------
-setupToggleable = (toggle, input, refVal, disabledVal = 0) ->
-  # Set default value
-  $(input).val(refVal)
-  if refVal > disabledVal
-    $(toggle).prop("checked", "on")
-  else
-    $(toggle).removeProp("checked", "on")
-  # Disable field on checkbox disable
-  $(toggle).change ->
-    if $(toggle).prop("checked")
-      $(input).removeAttr("disabled", "")
-    else
-      $(input).attr("disabled", "")

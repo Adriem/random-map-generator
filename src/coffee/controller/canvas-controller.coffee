@@ -5,19 +5,10 @@
 Color =
   GRID: "#211"
   BACKGROUND: "#fff"
-  # WALL: "#a99"
-  # WALL: "#a11"
-  # WALL: "#e60"
   WALL: "#200"
   GROUND: "#622"
-  DOOR: "#400"
   DOOR: "#844"
-  DEBUG: "#0F0"
-  # START_POINT: "#4A3"
-  # START_POINT: "#160"
-  # START_POINT: "#150"
   START_POINT: "#450"
-  # START_POINT: "#540"
 
 wall = ['NONE', 'TILE', 'COMPOSED']
 
@@ -34,13 +25,12 @@ class CanvasController
 
   calculateWallSize: (tileSize) -> tileSize // 3
 
-  drawMap: (tilemap, drawGrid = true, showWalls = true) ->
+  drawMap: (tilemap, drawGrid = true, showWalls = 1) ->
     tileSize = @calculateTileSize(tilemap.width)
     @canvas.fillStyle = Color.BACKGROUND
     @canvas.fillRect(0, 0, @getWidth(), @getWidth())
     for y in [0...tilemap.height] then for x in [0...tilemap.width]
       switch tilemap[x][y]
-        when Tile.FIRST_ROOM then @drawTile(x, y, tileSize, Color.START_POINT)
         when Tile.GROUND then @drawTile(x, y, tileSize, Color.GROUND)
         when Tile.WALL
           if wall[showWalls] is 'TILE'

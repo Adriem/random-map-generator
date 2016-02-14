@@ -27,6 +27,9 @@ Defaults =
   INITIAL_ROOM_HEIGHT: 1
   MIN_ROOM_SIZE: 1
   MAX_ROOM_SIZE: 2
+  MIN_ROOM_AREA: 1
+  MAX_ROOM_AREA: 6
+  RATIO_RESTRICTION: 0.5
 
 # ------------------------------------------------------------------------------
 
@@ -204,7 +207,7 @@ generate = (numberOfRooms, properties, onStepCallback) ->
   state = generator.generateInitialState()
   state.addRoom(initialRoom)
   remainingRooms = numberOfRooms - 1  # Take initial room
-  onStepCallback(obtainMap(state.clone()), state.getSteps()) if onStepCallback?
+  callCallback(generator, state, onStepCallback)
 
   # Generate rooms randomly
   while remainingRooms > 0 and state.frontier.length > 0
@@ -219,13 +222,16 @@ generate = (numberOfRooms, properties, onStepCallback) ->
         room.neighbours[door] = newRoom.id
         state.addRoom(newRoom)
         remainingRooms--
-        onStepCallback(obtainMap(state.clone()), state.getSteps()) if onStepCallback?
+        callCallback(generator, state, onStepCallback)
 
-  return obtainMap(state)
+  return new Map(generator.mapWidth, generator.mapHeight, state.clone().rooms)
 
+callCallback = (generator, state, callback) ->
+  if callback? then callback(
+    new Map(generator.mapWidth, generator.mapHeight, state.clone().rooms),
+    state.getSteps()
+  )
 
-obtainMap = (state) ->
-  new Map(state.collisionMap.width, state.collisionMap.height, state.rooms)
 
 ### EXPORT FUNCTIONS ###
 window.generate = generate
