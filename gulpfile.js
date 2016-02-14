@@ -19,7 +19,7 @@ gulp.task("coffee", function(){
 });
 
 gulp.task("js", ["coffee"], function(){
-    gulp.src("src/js/*.js")
+    gulp.src("src/js/**/*.js")
         .pipe(uglify())
         .pipe(rename({
             extname: ".min.js"
@@ -28,16 +28,16 @@ gulp.task("js", ["coffee"], function(){
 });
 
 gulp.task("css", function(){
-    gulp.src("src/css/*.css")
+    gulp.src("src/css/**/*.css")
         .pipe(cssmin())
         .pipe(rename({
-            extname: ".min.js"
+            extname: ".min.css"
         }))
         .pipe(gulp.dest("dist/css/"))
 });
 
 gulp.task("move-html", function(){
-    gulp.src("./src/*.html")
+    gulp.src("./src/**/*.html")
         .pipe(gulp.dest("./dist"))
 })
 
@@ -49,17 +49,17 @@ gulp.task("build-dev", ["coffee"], function(){
 });
 
 gulp.task("build-dist", ["css", "js", "move-html"], function(){
-    var sources = gulp.src(['./dist/js/*.js', './dist/css/*.css'], {read: false});
-    gulp.src("./dist/*.html")
+    var sources = gulp.src(['./dist/**/*.js', './dist/**/*.css'], {read: false});
+    gulp.src("./dist/**/*.html")
         .pipe(inject(sources, {relative: true}))
         .pipe(htmlmin({
-            empty: false,
+            empty: true,
             cdata: false,
             comments: false,
             conditionals: false,
             spare: false,
             quotes: false,
-            loose: false
+            loose: true
         }))
         .pipe(gulp.dest("./dist"))
 });
