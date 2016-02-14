@@ -9,6 +9,7 @@ $(document).ready () ->
     tilesPerUnit : new NumericInput('tilesPerUnit', 'Tiles per unit', 1)
     wallStyle    : new SelectInput('wallStyle', "Wall style", wallStyle)
     drawGrid     : new ToggleInput('drawGrid', "Draw grid")
+    showRoomList : new ToggleInput('showRoomList', "Show room list")
     # debugMode    : new ToggleInput('debugMode', "Show debug info", true)
 
   # GENERATOR CONTROLS
@@ -56,7 +57,7 @@ $(document).ready () ->
 
   drawMap = (canvas, map) ->
     $('#room-list').empty()
-    for room in map.roomList
+    if properties.showRoomList.get() then for room in map.roomList
       $('#room-list').append """
         <div><strong>Room ##{room.id}: </strong> {
           x: #{room.x}, y: #{room.y}, width: #{room.width}, height: #{room.height}
@@ -107,6 +108,7 @@ $(document).ready () ->
   properties.tilesPerUnit.setListener(() -> drawMap(canvas, map) unless drawing)
   properties.wallStyle.setListener(() -> drawMap(canvas, map) unless drawing)
   properties.drawGrid.setListener(() -> drawMap(canvas, map) unless drawing)
+  properties.showRoomList.setListener(() -> drawMap(canvas, map) unless drawing)
 
   # Set listener to toggleable inputs
   controls.maxArea.setToggleListener () ->
